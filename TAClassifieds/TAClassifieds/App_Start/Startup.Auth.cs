@@ -32,7 +32,7 @@ namespace TAClassifieds
                appId: "",
                appSecret: "");
 
-            //app.UseGoogleAuthentication();
+            app.UseGoogleAuthentication();
         }
     }
 }
