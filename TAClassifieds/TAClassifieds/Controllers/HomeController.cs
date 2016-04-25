@@ -12,6 +12,7 @@ namespace TAClassifieds.Controllers
         {
             return View();
             //test
+            //test check-in
         }
 
         public ActionResult About()
