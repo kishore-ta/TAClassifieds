@@ -23,6 +23,7 @@ namespace TAClassifieds.Controllers
         public AccountController(UserManager<ApplicationUser> userManager)
         {
             UserManager = userManager;
+            //comment added
         }
 
         public UserManager<ApplicationUser> UserManager { get; private set; }
