@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
+using TAClassifieds.Data;
+using TAClassifieds.Model;
 using TAClassifieds.Models;
 
 namespace TAClassifieds.Controllers
@@ -44,6 +46,14 @@ namespace TAClassifieds.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            //UnitOfWork uw=new UnitOfWork();
+            //var tab = uw.CategoryRepository.Get().ToList();
+
+            ////add category
+            //var cat = new Category() {CategoryName = "bla bla", CategoryImage = "img"};
+            //uw.CategoryRepository.Insert(cat);
+            //uw.Save();
+
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindAsync(model.UserName, model.Password);
@@ -194,17 +204,27 @@ namespace TAClassifieds.Controllers
 
         //
         // GET: /Account/ExternalLoginCallback
+        
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
-            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
-            if (loginInfo == null)
+            var result = await AuthenticationManager.AuthenticateAsync(DefaultAuthenticationTypes.ExternalCookie);
+            if (result == null || result.Identity == null)
             {
                 return RedirectToAction("Login");
             }
 
+            var idClaim = result.Identity.FindFirst(ClaimTypes.NameIdentifier);
+            if (idClaim == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var login = new UserLoginInfo(idClaim.Issuer, idClaim.Value);
+            var name = result.Identity.Name == null ? "" : result.Identity.Name.Replace(" ", "");
+
             // Sign in the user with this external login provider if the user already has a login
-            var user = await UserManager.FindAsync(loginInfo.Login);
+            var user = await UserManager.FindAsync(login);
             if (user != null)
             {
                 await SignInAsync(user, isPersistent: false);
@@ -214,8 +234,8 @@ namespace TAClassifieds.Controllers
             {
                 // If the user does not have an account, then prompt the user to create an account
                 ViewBag.ReturnUrl = returnUrl;
-                ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { UserName = loginInfo.DefaultUserName });
+                ViewBag.LoginProvider = login.LoginProvider;
+                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { UserName = name });
             }
         }
 

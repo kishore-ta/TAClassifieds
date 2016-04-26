@@ -2,6 +2,7 @@
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
+using TAClassifieds.Middleware;
 
 namespace TAClassifieds
 {
@@ -19,6 +20,8 @@ namespace TAClassifieds
             // Use a cookie to temporarily store information about a user logging in with a third party login provider
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
+        // app.UseIncludeContextKeys();
+
             // Uncomment the following lines to enable logging in with third party login providers
             //app.UseMicrosoftAccountAuthentication(
             //    clientId: "",
@@ -28,9 +31,9 @@ namespace TAClassifieds
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-              // appId: "",
-             //  appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: "114264208733685",
+               appSecret: "b6f81744f33c325006e081301918f0d4");
 
             //app.UseGoogleAuthentication();
         }

@@ -5,6 +5,10 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAClassifieds", "TAClassifieds\TAClassifieds.csproj", "{A6FCB3A9-E876-4DA8-BDEE-F0F79FFB8389}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAClassifieds.Data", "TAClassifieds.Data\TAClassifieds.Data.csproj", "{7BD6034A-A01D-4F2D-99B5-AA013A1850E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAClassifieds.Model", "TAClassifieds.Model\TAClassifieds.Model.csproj", "{301966AD-BE15-4F7B-8991-5F9A0468C622}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{A6FCB3A9-E876-4DA8-BDEE-F0F79FFB8389}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6FCB3A9-E876-4DA8-BDEE-F0F79FFB8389}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6FCB3A9-E876-4DA8-BDEE-F0F79FFB8389}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BD6034A-A01D-4F2D-99B5-AA013A1850E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BD6034A-A01D-4F2D-99B5-AA013A1850E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BD6034A-A01D-4F2D-99B5-AA013A1850E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BD6034A-A01D-4F2D-99B5-AA013A1850E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{301966AD-BE15-4F7B-8991-5F9A0468C622}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{301966AD-BE15-4F7B-8991-5F9A0468C622}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{301966AD-BE15-4F7B-8991-5F9A0468C622}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{301966AD-BE15-4F7B-8991-5F9A0468C622}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

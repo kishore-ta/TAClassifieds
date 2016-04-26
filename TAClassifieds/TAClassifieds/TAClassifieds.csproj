@@ -163,6 +163,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Middleware\AppMiddlewareExtensions.cs" />
+    <Compile Include="Middleware\TestMiddleware.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -224,6 +226,16 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TAClassifieds.Data\TAClassifieds.Data.csproj">
+      <Project>{7bd6034a-a01d-4f2d-99b5-aa013a1850e2}</Project>
+      <Name>TAClassifieds.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TAClassifieds.Model\TAClassifieds.Model.csproj">
+      <Project>{301966ad-be15-4f7b-8991-5f9a0468c622}</Project>
+      <Name>TAClassifieds.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
