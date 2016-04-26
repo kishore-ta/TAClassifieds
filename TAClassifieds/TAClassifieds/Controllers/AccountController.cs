@@ -51,9 +51,10 @@ namespace TAClassifieds.Controllers
 
             ////add category
             //var cat = new Category() {CategoryName = "bla bla", CategoryImage = "img"};
+          
             //uw.CategoryRepository.Insert(cat);
             //uw.Save();
-
+            
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindAsync(model.UserName, model.Password);

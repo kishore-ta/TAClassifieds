@@ -1,31 +1,95 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
+<div class="container">
+    
+  
+    <div class="row">
+        <label class="col-sm-offset-1 col-sm-4">
+            <h4>View Ads in:</h4>
+        </label>
+        <div class="col-sm-10 col-sm-offset-1 ">
+            <div class="col-sm-3">
+                <a href="#">
+                    <img src="images/electronics.jpg" class="image-box" width="180px" height="150px" id="Electronics" />
+                </a>
+                <h4 class="col-sm-offset-2">Electronics</h4>
+            </div>
+            <div class="col-sm-3">
+                <a href="#">
+                    <img src="images/smart_phones_new.jpg" class="image-box" width="180px" height="150px" id="MobilePhones" />
+                </a>
+                <h4 class="col-sm-offset-2">Mobile Phones</h4>
+            </div>
+            <div class="col-sm-3">
+                <a href="#">
+                    <img src="images/house_rent.jpg" class="image-box" width="180px" height="150px" id="Rental" />
+                </a>
+                <h4 class="col-sm-offset-2">House Rental</h4>
+            </div>
+            <div class="col-sm-3">
+                <a href="#">
+                    <img src="images/car1.jpg" class="image-box" width="180px" height="150px" id="Automobiles" />
+                </a>
+                <h4 class="col-sm-offset-2">Automobiles</h4>
+            </div>
+        </div>
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
-</div>
+    </div>
+    <div class="row">
+        <div class="adcontainer">
+            <label>Ads in: <span class="category"></span></label>
+            <table class="table">
+                <tr class="list-box">
+                    <td class="col-xs-4">
+                        <img src="images/hondacity.jpg" width="150px" height="120px">
+                    </td>
+                    <td class="col-xs-6">
+                        <a href="#"><h4>2015 Honda City petrol</h4></a>
+                        <p>Delhi</p>
+                        <p>March 12, 2016</p>
+                    </td>
+                    <td class="col-xs-2">
+                        <h4>Rs.9,00,000 </h4>
+                    </td>
+                </tr>
+                <tr class="list-box">
+                    <td class="col-xs-4">
+                        <img src="images/2014_ford_fiesta_india.jpg" width="150px" height="120px">
+                    </td>
+                    <td class="col-xs-8">
+                        <a href="viewdetail.html"><h4>2009 Ford Fiesta diesel 60000 Kms</h4></a>
+                        <p>Delhi</p>
+                        <p>April 21, 2016</p>
+                    </td>
+                    <td class="col-xs-2">
+                        <h4>Rs.4,00,000 </h4>
+                    </td>
+                </tr>
+                <tr class="list-box">
+                    <td class="col-xs-4">
+                        <img src="images/polo.jpg" width="150px" height="120px">
+                    </td>
+                    <td class="col-xs-8">
+                        <a href="viewdetail.html"><h4>2013 Polo Volkswagen</h4></a>
+                        <p>Mumbai</p>
+                        <p>March 14, 2016</p>
+                    </td>
+                    <td class="col-xs-2">
+                        <h4>Rs.4,00,000 </h4>
+                    </td>
+                </tr>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+            </table>
+            <ul class="pagination pull-right">
+                <li><a href="#">&laquo;</a></li>
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">&raquo;</a></li>
+            </ul>
+        </div>
     </div>
 </div>
