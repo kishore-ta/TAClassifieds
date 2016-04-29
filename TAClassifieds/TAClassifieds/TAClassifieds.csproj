@@ -163,23 +163,54 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Middleware\AppMiddlewareExtensions.cs" />
+    <Compile Include="Middleware\TestMiddleware.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\classifiedStyles.css" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\jquery-ui.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\2014_ford_fiesta_india.jpg" />
+    <Content Include="Images\car.jpg" />
+    <Content Include="Images\car1.jpg" />
+    <Content Include="Images\company_logo.png" />
+    <Content Include="Images\electronics.jpg" />
+    <Content Include="Images\fb.png" />
+    <Content Include="Images\ford.jpg" />
+    <Content Include="Images\gmail.png" />
+    <Content Include="Images\google.png" />
+    <Content Include="Images\hondacity.jpg" />
+    <Content Include="Images\Houses_for_rent.jpg" />
+    <Content Include="Images\house_rent.jpg" />
+    <Content Include="Images\polo.jpg" />
+    <Content Include="Images\smartphones.jpg" />
+    <Content Include="Images\smart_phones_new.jpg" />
+    <Content Include="Images\social-media-icons-15.png" />
+    <Content Include="Images\usedcar1.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Images\fb.svg" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -224,6 +255,16 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TAClassifieds.Data\TAClassifieds.Data.csproj">
+      <Project>{7bd6034a-a01d-4f2d-99b5-aa013a1850e2}</Project>
+      <Name>TAClassifieds.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TAClassifieds.Model\TAClassifieds.Model.csproj">
+      <Project>{301966ad-be15-4f7b-8991-5f9a0468c622}</Project>
+      <Name>TAClassifieds.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
