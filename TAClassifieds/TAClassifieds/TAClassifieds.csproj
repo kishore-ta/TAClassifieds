@@ -41,7 +41,7 @@
   <ItemGroup>
     <Reference Include="Google.Apis, Version=1.9.1.12395, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Users\ckrishnaprasad.pothu\Desktop\gplus-quickstart-csharp-master\gplus-quickstart-csharp\bin\Google.Apis.dll</HintPath>
+      <HintPath>bin\New folder\Google.Apis.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis.Auth, Version=1.9.1.12395, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
