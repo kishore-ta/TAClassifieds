@@ -26,6 +26,7 @@ namespace TAClassifieds.Controllers
         {
             UserManager = userManager;
             //comment added123sdfsdf
+            //comment added123sdfsdf
         }
 
         public UserManager<ApplicationUser> UserManager { get; private set; }
