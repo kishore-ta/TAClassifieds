@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TAClassifieds.Model
 {
-   public class ClassifiedContact
+   public class ClassifiedContact       
     {
         [Key]
         public int ContactId { get; set; }
