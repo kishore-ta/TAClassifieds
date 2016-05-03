@@ -1,0 +1,135 @@
+﻿@model TAClassifieds.Model.ClassifiedContactVM
+@{
+    ViewBag.Title = "PostAd";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<html>
+<head>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#pic')
+                        .attr('src', e.target.result)
+                        .width(100)
+                        .height(100);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".image-box").on("click", function (event) {
+                var selected = "#" + $(this).attr("id");
+                $(selected).toggleClass("image-selected");
+                $('.image-box').not(this).removeClass('image-selected');
+                $(".category").text($(this).attr("id"));
+            });
+        });
+    </script>
+</head>
+
+<body>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="container">
+
+            <div class="row categories">
+                <label class="col-sm-offset-1 col-sm-4">
+                    Select the category:
+                </label>
+                <div class="col-sm-10 col-sm-offset-1 ">
+                    @foreach (var category in Model.categoriesList)
+                    {
+                        <div class="col-sm-3">
+                            <a href="#">
+                                <img src="@category.CategoryImage" class="image-box" width="180px" height="150px" id="@category.CategoryId" />
+                            </a>
+                            <h4 class="col-sm-offset-2">@category.CategoryName</h4>
+                        </div>
+                    }
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="logincontainer">
+                    <h4><label>Post an ad for: <span class="category"></span></label></h4>
+                    <form class="form-horizontal form-signin form-margin" role="form">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ClassifiedTitle, htmlAttributes: new { @class = "control-label col-sm-4" })
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(model => model.ClassifiedTitle, new { id = "adTitle", @class = "form-control", placeholder = "Give the Title for your ad here" })
+                                @*@Html.ValidationMessageFor(model => model.ClassifiedTitle, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-sm-4" })
+                            <div class="col-sm-6">
+                                @*<textarea class="form-control" id="adDesc" name="adDesc" placeholder="Give a brief description for your ad here"> </textarea>*@
+                                @Html.TextAreaFor(model => model.Description, new { id = "adDesc", @class = "form-control", placeholder = "Give a brief description for your ad here" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="uploadPic">Upload photos</label>
+                            <div class="col-xs-6">
+                                <input type="file" onchange="readURL(this);" id="uploadPic" />
+                                <img id="pic" src="#" alt="your image" width="100px" height="100px" />
+                            </div>
+                        </div>
+                        <hr>
+                        <h4><label class="col-sm-12 col-xs-12">Your contact details:</label></h4>
+                        <div class="form-group ">
+                            @Html.LabelFor(model => model.classifiedsContacts.ContactName, htmlAttributes: new { @class = "control-label col-sm-4" })
+                            <div class="col-xs-6">
+                                @*<input type="text" class="form-control" id="name" placeholder="Enter Your name">*@
+                                @Html.TextBoxFor(model => model.classifiedsContacts.ContactName, new { id = "name", @class = "form-control", placeholder = "Enter Your name" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.classifiedsContacts.ContactPhone, htmlAttributes: new { @class = "control-label col-sm-4" })
+                            <div class="col-xs-6">
+                                @* <input type="tel" class="form-control" id="phone" placeholder="+91">*@
+                                @Html.TextBoxFor(model => model.classifiedsContacts.ContactPhone, new { type = "tel", id = "phone", @class = "form-control", placeholder = "+91" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.classifiedsContacts.ContactCity, htmlAttributes: new { @class = "control-label col-sm-4" })
+                            <div class="col-xs-6">
+                                @* <input type="text" class="form-control" id="city" placeholder="Enter Your city">*@
+                                @Html.TextBoxFor(model => model.classifiedsContacts.ContactCity, new { id = "city", @class = "form-control", placeholder = "Enter Your city" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ClassifiedPrice, htmlAttributes: new { @class = "control-label col-sm-4" })
+                            <div class="col-xs-6">
+                                @* <input type="number" class="form-control" id="price" placeholder="Rs.">*@
+                                @Html.TextBoxFor(model => model.ClassifiedPrice, new { type = "number", id = "price", @class = "form-control", placeholder = "Rs." })
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-4 col-sm-12">
+                                @* <button id="create-btn" type="submit" class="btn btn-default btn-success">Post Ad</button>*@
+
+                                @Html.ActionLink("Post Ad", "PostAd", "PostAd", routeValues: null, htmlAttributes: new { id = "create-btn", @class = "btn btn-default btn-success" })
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    }
+</body>
+</html>
+
+
