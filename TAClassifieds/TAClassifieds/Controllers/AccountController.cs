@@ -46,8 +46,9 @@ namespace TAClassifieds.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            //UnitOfWork uw=new UnitOfWork();
-            //var tab = uw.CategoryRepository.Get().ToList();
+
+            UnitOfWork uw = new UnitOfWork();
+            var tab = uw.CategoryRepository.Get().ToList();
 
             ////add category
             //var cat = new Category() {CategoryName = "bla bla", CategoryImage = "img"};

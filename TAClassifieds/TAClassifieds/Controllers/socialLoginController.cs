@@ -19,6 +19,7 @@ using System.IO;
 using System.Web.Mvc;
 using System.Web.Security;
 using TAClassifieds.Data;
+using TAClassifieds.Model;
 
 
 namespace TAClassifieds.Controllers
@@ -28,7 +29,7 @@ namespace TAClassifieds.Controllers
     {
         public ActionResult gplusLogin()
         {
-            TAC_User userDetails = new TAC_User();
+            User userDetails = new User();
             ClientSecrets secrets = new ClientSecrets() {
                 ClientId = "465360611509-vamhmig2ki8ba7t10ljq7c3p8bq7l06f.apps.googleusercontent.com",
                 ClientSecret = "1-kfNNOJCbza3gdreFwLWbUs"

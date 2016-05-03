@@ -51,58 +51,11 @@
     <Compile Include="ClassifiedsContext.cs" />
     <Compile Include="GenericRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TAClassifieds.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TAClassifieds.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TAClassifieds.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TAClassifieds.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TAClassifiedsDB.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TAClassifiedsDB.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="TAC_Category.cs">
-      <DependentUpon>TAClassifieds.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TAC_Classified.cs">
-      <DependentUpon>TAClassifieds.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TAC_ClassifiedContact.cs">
-      <DependentUpon>TAClassifieds.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TAC_Country.cs">
-      <DependentUpon>TAClassifieds.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TAC_User.cs">
-      <DependentUpon>TAClassifieds.tt</DependentUpon>
-    </Compile>
     <Compile Include="UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <EntityDeploy Include="TAClassifiedsDB.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>TAClassifiedsDB.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="TAClassifieds.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>TAClassifiedsDB.edmx</DependentUpon>
-      <LastGenOutput>TAClassifieds.Context.cs</LastGenOutput>
-    </None>
-    <None Include="TAClassifiedsDB.edmx.diagram">
-      <DependentUpon>TAClassifiedsDB.edmx</DependentUpon>
-    </None>
-    <None Include="TAClassifieds.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>TAClassifiedsDB.edmx</DependentUpon>
-      <LastGenOutput>TAClassifieds.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TAClassifieds.Model\TAClassifieds.Model.csproj">

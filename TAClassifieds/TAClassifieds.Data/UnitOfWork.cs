@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TAClassifieds.Data;
+using TAClassifieds.Model;
 
 namespace TAClassifieds.Model
 {
     public class UnitOfWork :IDisposable
     {
         private readonly ClassifiedsContext _context = new ClassifiedsContext();
+        private GenericRepository<User> _userRepository;
         private GenericRepository<Category> _categoryRepository;
         public GenericRepository<Category> CategoryRepository
         {
@@ -22,6 +24,18 @@ namespace TAClassifieds.Model
                 return _categoryRepository;
             }
         }
+        public GenericRepository<User> UserRepository
+        {
+            get
+            {
+                if (this._userRepository == null)
+                {
+                    this._userRepository = new GenericRepository<User>(_context);
+                }
+                return _userRepository;
+            }
+        }
+
         public void Save()
         {
             _context.SaveChanges();

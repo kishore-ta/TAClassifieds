@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TAClassifieds.Data;
+using TAClassifieds.Model;
 
 namespace TAClassifieds.Controllers
 {
@@ -31,23 +32,34 @@ namespace TAClassifieds.Controllers
         }
 
 
-        [HttpGet]
-        public ActionResult insertUser(string fn,string ln,string email)
-        {
-            return View();
-        }
+        //[HttpGet]
+        //public ActionResult insertUser(string fn,string ln,string email)
+        //{
+        //    return View();
+        //}
          
         public ActionResult insertUser()
         {
-            using (var db = new TAC_Team1Entities())
-            {
-                TAC_User user = new TAC_User();
-                user.First_Name = "Chaya krishna prasad";
-                user.Last_Name = "pothuraju";
-                user.Email = "ckrishnaprasad.pothuraju@techaspect.com";
-                db.TAC_User.Add(user);
-                db.SaveChanges();
-            }
+
+            UnitOfWork uw = new UnitOfWork();
+            var tab = uw.CategoryRepository.Get().ToList();
+
+            //add category
+            var cat = new Category() { CategoryName = "bla bla", CategoryImage = "img" };
+
+            uw.CategoryRepository.Insert(cat);
+            uw.Save();
+
+
+            //UnitOfWork work = new UnitOfWork();
+            //User user = new User();
+            //user.First_Name = "Chaya krishna prasad";
+            //user.Last_Name = "pothuraju Test";
+            //user.Email = "ckrishnaprasad.pothuraju@techaspect.com";
+            //work.UserRepository.Insert(user);
+
+            //work.Save();
+
             return View("Index");
         }
 
