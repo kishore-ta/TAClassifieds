@@ -2,7 +2,7 @@
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
-using TAClassifieds.Middleware;
+
 
 namespace TAClassifieds
 {
