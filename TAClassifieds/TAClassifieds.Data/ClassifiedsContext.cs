@@ -10,7 +10,9 @@ namespace TAClassifieds.Data
     public class ClassifiedsContext : DbContext
     {
         public DbSet<Category> Categories { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; }      
+        public DbSet<Classified> Classifieds { get; set; }
+        public DbSet<ClassifiedContact> ClassifiedContacts { get; set; }
     }
     
 }

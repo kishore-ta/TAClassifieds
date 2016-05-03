@@ -15,7 +15,9 @@ namespace TAClassifieds.Model
         public System.Guid UserId { get; set; }
         public string Email { get; set; }
         public string UPassword { get; set; }
+        [Column("First Name")]
         public string First_Name { get; set; }
+        [Column("Last Name")]
         public string Last_Name { get; set; }
         public Nullable<bool> Gender { get; set; }
         public Nullable<System.DateTime> DOB { get; set; }
@@ -28,7 +30,8 @@ namespace TAClassifieds.Model
         public Nullable<bool> IsLocked { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
-        public int CountryId { get; set; }
+        [Column("Country")]
+        public Nullable<int> CountryId { get; set; }
     
         public virtual ICollection<Classified> Classified { get; set; }
         public virtual Country Country { get; set; }

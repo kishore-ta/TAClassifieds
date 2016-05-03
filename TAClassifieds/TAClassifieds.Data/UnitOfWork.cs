@@ -24,6 +24,35 @@ namespace TAClassifieds.Model
                 return _categoryRepository;
             }
         }
+
+        //Classified Repository
+        private GenericRepository<Classified> _classifiedRepository;
+        public GenericRepository<Classified> ClassifiedRepository
+        {
+            get
+            {
+                if (this._classifiedRepository == null)
+                {
+                    this._classifiedRepository = new GenericRepository<Classified>(_context);
+                }
+                return _classifiedRepository;
+            }
+        }
+
+        //ClassifiedContact Repository
+        private GenericRepository<ClassifiedContact> _classifiedContactRepository;
+        public GenericRepository<ClassifiedContact> ClassifiedContactRepository
+        {
+            get
+            {
+                if (this._classifiedContactRepository == null)
+                {
+                    this._classifiedContactRepository = new GenericRepository<ClassifiedContact>(_context);
+                }
+                return _classifiedContactRepository;
+            }
+        }
+
         public GenericRepository<User> UserRepository
         {
             get

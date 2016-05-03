@@ -20,8 +20,10 @@ namespace TAClassifieds.Controllers
         public ActionResult PostAd(ClassifiedContactVM Model)
         {
             UnitOfWork uw = new UnitOfWork();
-            //var categoriesList = uw.CategoryRepository.Get().ToList();
-            Model.categoriesList = uw.CategoryRepository.Get().ToList();
+            
+            Model.categoriesList = uw.CategoryRepository.Get().ToList();         
+
+
             return View(Model);
         }
 
@@ -29,14 +31,33 @@ namespace TAClassifieds.Controllers
         [ActionName("PostAd")]
         public ActionResult PostAdClassifiedVM(ClassifiedContactVM Model)
         {
-            //    UnitOfWork uw = new UnitOfWork();
-            //    var clsfied = new Classified() {CategoryName = "bla bla", CategoryImage = "img"};
+            UnitOfWork uw = new UnitOfWork();
+            
+            int categoryId = 2;
+            // var user1 = uw.UserRepository.GetByID(Guid.Parse("aa968550-1c9e-483b-95d5-c12eab243024"));
 
-            //    uw.ClassifiedRepository.Insert(clsfied);
-            //    uw.Save();
+            Classified obj = new Classified();
+            obj.CategoryId = Model.CategoryId;
+            obj.ClassifiedTitle = Model.ClassifiedTitle;
+            obj.Description = Model.Description;
+            obj.ClassifiedImage = Model.ClassifiedImage;
+            obj.ClassifiedPrice = Convert.ToInt32(Model.ClassifiedPrice);
+            obj.Summary = Model.Description;
+            obj.PostedDate = DateTime.Now;
+            obj.CreatedBy = Guid.Parse("aa968550-1c9e-483b-95d5-c12eab243024");
+            //obj.User=user1;
+            ClassifiedContact obj1 = Model.classifiedsContacts;
+            
+            Classified cls = uw.ClassifiedRepository.Insert(obj);
+            obj1.ClassifiedId = cls.ClassifiedId;
 
-            //    //Model.categoriesList = uw.CategoryRepository.Get().ToList();
+            //obj.ClassifiedContacts.Add(obj1);
+
+            uw.ClassifiedContactRepository.Insert(obj1);
+
+            uw.Save();
+           
             return View(Model);
         }
-	}
+    }
 }
