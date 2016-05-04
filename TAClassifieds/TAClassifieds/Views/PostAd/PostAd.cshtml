@@ -31,8 +31,7 @@
             $(".image-box").on("click", function (event) {
                 var selected = "#" + $(this).attr("id");
                 $(selected).toggleClass("image-selected");
-                $('.image-box').not(this).removeClass('image-selected');               
-                $(".category").text($(this).attr("id"));
+                $('.image-box').not(this).removeClass('image-selected'); 
                 $(".categoryName").text($(this).attr("title"));
                 $("#hdnCategoryID").val($(this).attr("id"));
                 
@@ -41,16 +40,19 @@
             $("#create-btn").click(function () {              
                 if ($("#hdnCategoryID").val() == "") {
                     alert("Please Select Ad Category Image.");
+                    return false;
                 }
                 else {
                     if ($('#uploadPic').val() == '') {
                         // There is no file selected
                         alert("Please select file to upload");
+                        return false;
                     }
                     else {
                         var ext = $('#uploadPic').val().split('.').pop().toLowerCase();
                         if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
                             alert('invalid extension!');
+                            return false;
                         }
                     }
                 }
@@ -64,9 +66,7 @@
 <body>
     @using (Html.BeginForm("PostAd", "PostAd", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        @Html.AntiForgeryToken()
         <div class="container">
-
             <div class="row categories">
                 <label class="col-sm-offset-1 col-sm-4">
                     Select the category:
@@ -86,7 +86,7 @@
             </div>
             <div class="row">
                 <div class="logincontainer">
-                    <h4><label>Post an ad for: <span style="display:none" class="category"></span><span class="categoryName"></span></label></h4>
+                    <h4><label>Post an ad for: <span class="categoryName"></span></label></h4>
                     <form class="form-horizontal form-signin form-margin" role="form">
                         <div class="form-group">
                             @Html.LabelFor(model => model.ClassifiedTitle, htmlAttributes: new { @class = "control-label col-sm-4" })

@@ -20,11 +20,15 @@ namespace TAClassifieds.Controllers
         [HttpGet]
         public ActionResult PostAd(ClassifiedContactVM Model)
         {
-            UnitOfWork uw = new UnitOfWork();
+            try
+            {
+                UnitOfWork uw = new UnitOfWork();
+                Model.categoriesList = uw.CategoryRepository.Get().ToList();
+            }
+            catch (Exception ex)
+            {
 
-            Model.categoriesList = uw.CategoryRepository.Get().ToList();
-
-
+            }
             return View(Model);
         }
 
@@ -35,40 +39,43 @@ namespace TAClassifieds.Controllers
             try
             {
                 var path = string.Empty;
+                var strPath = string.Empty;
                 UnitOfWork uw = new UnitOfWork();
 
-                Classified obj = new Classified();
-                obj.CategoryId = Convert.ToInt16(categoryvalue);
-                obj.ClassifiedTitle = Model.ClassifiedTitle;
-                obj.Description = Model.Description;
+                Classified objClassified = new Classified();
+                objClassified.CategoryId = Convert.ToInt16(categoryvalue);
+                objClassified.ClassifiedTitle = Model.ClassifiedTitle;
+                objClassified.Description = Model.Description;
 
                 if (file != null && file.ContentLength > 0)
                 {
                     // extract only the filename
                     var fileName = Path.GetFileName(file.FileName);
                     // store the file inside ~/BrowseImages folder
-                    path = Server.MapPath("~/BrowseImages/" + Guid.NewGuid() + "-" + fileName);
+                    strPath = "/BrowseImages/" + Guid.NewGuid() + "-" + fileName;
+                    path = Server.MapPath(strPath);
                     file.SaveAs(path);
-                    obj.ClassifiedImage = "~/BrowseImages/" + Guid.NewGuid() + "-" + fileName;
+                    objClassified.ClassifiedImage = strPath;
                 }
 
-                obj.ClassifiedPrice = Convert.ToInt32(Model.ClassifiedPrice);
-                obj.Summary = Model.Description;
-                obj.PostedDate = DateTime.Now;
-                obj.CreatedBy = Guid.Parse("aa968550-1c9e-483b-95d5-c12eab243024");
+                objClassified.ClassifiedPrice = Convert.ToInt32(Model.ClassifiedPrice);
+                objClassified.Summary = Model.Description;
+                objClassified.PostedDate = DateTime.Now;
+                objClassified.CreatedBy = Guid.Parse("aa968550-1c9e-483b-95d5-c12eab243024");
 
-                ClassifiedContact obj1 = Model.classifiedsContacts;
+                ClassifiedContact objContact = Model.classifiedsContacts;
 
-                Classified cls = uw.ClassifiedRepository.Insert(obj);
-                obj1.ClassifiedId = cls.ClassifiedId;
+                Classified cls = uw.ClassifiedRepository.Insert(objClassified);
+                objContact.ClassifiedId = cls.ClassifiedId;
 
-                uw.ClassifiedContactRepository.Insert(obj1);
+                uw.ClassifiedContactRepository.Insert(objContact);
                 uw.Save();
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
+
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("GetAd", "Home");
         }
     }
 }

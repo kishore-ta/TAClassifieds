@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -12,54 +13,53 @@ namespace TAClassifieds.Controllers
     {
         public ActionResult Index()
         {
-            return View();            
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
             return View();
         }
 
-        public ActionResult Contact()
+        [HttpGet]
+        public ActionResult GetAd(ClassifiedContactVM Model, string categoryvalue, string categoryName)
         {
-            ViewBag.Message = "Your contact page.";
+            try
+            {
+                ViewBag.CatagoryName = string.Empty;
+                UnitOfWork uw = new UnitOfWork();
+                Model.categoriesList = uw.CategoryRepository.Get().ToList();
 
-            return View();
+                if (!string.IsNullOrEmpty(categoryvalue))
+                {
+                    Model.classifiedList = uw.ClassifiedRepository.GetWithRawSql("select * from TAC_Classified c Join TAC_ClassifiedContact cc ON c.ClassifiedId=cc.ClassifiedId where CategoryId=@categoryId order by PostedDate DESC", new SqlParameter("@categoryId", Convert.ToInt32(categoryvalue)));
+                    ViewBag.CatagoryName = categoryName;
+                }
+                else
+                {
+                    Model.classifiedList = uw.ClassifiedRepository.GetWithRawSql("select * from TAC_Classified c Join TAC_ClassifiedContact cc ON c.ClassifiedId=cc.ClassifiedId order by PostedDate DESC");
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return View(Model);
         }
 
-         
-        public ActionResult insertUser()
+        [HttpGet]
+        public ActionResult ClassifiedDetails(Classified Model, int classifiedId)
         {
+            try
+            {
+                UnitOfWork uw = new UnitOfWork();
+                Model = uw.ClassifiedRepository.GetByID(classifiedId);
+                ViewBag.PostedDate = Convert.ToDateTime(Model.PostedDate).ToString("MMMM-dd-yyyy");
+            }
+            catch(Exception ex)
+            {
 
-            UnitOfWork uw = new UnitOfWork();
-            var tab = uw.CategoryRepository.Get().ToList();
-
-            //add category
-            var cat = new Category() { CategoryName = "bla bla", CategoryImage = "img" };
-
-            uw.CategoryRepository.Insert(cat);
-            uw.Save();
-
-
-            //UnitOfWork work = new UnitOfWork();
-            //User user = new User();
-            //user.First_Name = "Chaya krishna prasad";
-            //user.Last_Name = "pothuraju Test";
-            //user.Email = "ckrishnaprasad.pothuraju@techaspect.com";
-            //work.UserRepository.Insert(user);
-
-            //work.Save();
-
-            return View("Index");
+            }
+            return View(Model);
         }
 
-        public bool sendMail(string userMail)
-        {
-            
-            return true;
-        }
+
     }
 }
 

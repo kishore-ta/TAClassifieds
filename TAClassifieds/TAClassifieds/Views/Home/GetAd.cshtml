@@ -1,0 +1,84 @@
+﻿@model TAClassifieds.Model.ClassifiedContactVM
+@{
+    ViewBag.Title = "GetAd";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".image-box").on("click", function (event) {
+                var selected = "#" + $(this).attr("id");
+                $(selected).toggleClass("image-selected");
+                $('.image-box').not(this).removeClass('image-selected');
+                $(".categoryName").text($(this).attr("title"));
+                $("#hdnCategoryID").val($(this).attr("id"));
+                $("#hdnCategoryName").text($(this).attr("title"));               
+          
+            });
+        });
+    </script>
+</head>
+
+<body>
+    @using (Html.BeginForm("GetAd", "Home"))
+    {
+        <div class="row">
+            <label class="col-sm-offset-1 col-sm-4">
+                <h4>View Ads in:</h4>
+            </label>
+            <div class="col-sm-10 col-sm-offset-1 ">
+                @foreach (var category in Model.categoriesList)
+                {
+                    <div class="col-sm-3">
+                        <a href=@Url.Action("GetAd", "Home", new { categoryvalue = @category.CategoryId })>
+                            <img src="@category.CategoryImage" class="image-box" width="180px" height="150px" id="@category.CategoryId" title="@category.CategoryName" />
+                        </a>
+                        <h4 class="col-sm-offset-2">@category.CategoryName</h4>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="adcontainer">
+                <label>Ads in: <span class="categoryName"></span><span>@ViewBag.CatagoryName</span></label>
+                <input type="hidden" id="hdnCategoryID" name="categoryvalue" />
+                <input type="hidden" id="hdnCategoryName" name="categoryName" />
+                <table class="table">
+
+                    @foreach (var clsfieds in Model.classifiedList)
+                    {
+                        <tr class="list-box">
+                            <td class="col-xs-4">
+                                <img src="@clsfieds.ClassifiedImage" width="150px" height="120px" id="@clsfieds.CategoryId" class="image-box-browse">
+                            </td>
+                            <td class="col-xs-8">
+                                <a href="@Url.Action("ClassifiedDetails", "Home", new { classifiedId = @clsfieds.ClassifiedId })"><h4>@clsfieds.ClassifiedTitle</h4></a>
+                                @*<p>@clsfieds.ContactCity</p>*@
+                                <p>@clsfieds.PostedDate</p>
+                            </td>
+                            <td class="col-xs-2">
+                                <h4>@clsfieds.ClassifiedPrice </h4>
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <ul class="pagination pull-right">
+                    <li><a href="#">&laquo;</a></li>
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li><a href="#">&raquo;</a></li>
+                </ul>
+            </div>
+        </div>
+    }
+</body>
+</html>

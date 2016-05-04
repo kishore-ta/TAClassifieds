@@ -44,5 +44,6 @@ namespace TAClassifieds.Model
         public virtual ClassifiedContact classifiedsContacts { get; set; }
 
         public IEnumerable<Category> categoriesList { get; set; }
+        public IEnumerable<Classified> classifiedList { get; set; }
     }
 }
