@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace TAClassifieds.Model
     [Table("TAC_Classified")]
     public class Classified
     {
-
+        [Required]
         public int CategoryId { get; set; }
         public int ClassifiedId { get; set; }
         public string ClassifiedTitle { get; set; }

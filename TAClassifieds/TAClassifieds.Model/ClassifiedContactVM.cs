@@ -21,7 +21,7 @@ namespace TAClassifieds.Model
         [DataType(DataType.MultilineText)]
         public string Summary { get; set; }
 
-        [Required]
+       
         [StringLength(200)]
         [DataType(DataType.MultilineText)]
         [DisplayName("Ad Description*")]

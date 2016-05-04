@@ -12,9 +12,7 @@ namespace TAClassifieds.Controllers
     {
         public ActionResult Index()
         {
-            return View();
-            //test
-            //test check-in
+            return View();            
         }
 
         public ActionResult About()
@@ -31,12 +29,6 @@ namespace TAClassifieds.Controllers
             return View();
         }
 
-
-        //[HttpGet]
-        //public ActionResult insertUser(string fn,string ln,string email)
-        //{
-        //    return View();
-        //}
          
         public ActionResult insertUser()
         {
