@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using TAClassifieds.Data;
 using TAClassifieds.Model;
+using TAClassifieds.BAL;
 
 namespace TAClassifieds.Controllers
 {
@@ -21,19 +22,17 @@ namespace TAClassifieds.Controllers
         {
             try
             {
-                ViewBag.CatagoryName = string.Empty;
-                UnitOfWork uw = new UnitOfWork();
-                Model.categoriesList = uw.CategoryRepository.Get().ToList();
+                //To Get Category Ads
+                Model = ClassifiedBAL.GetAllAdsBAL(Model, categoryvalue, categoryName);
 
                 if (!string.IsNullOrEmpty(categoryvalue))
                 {
-                    Model.classifiedList = uw.ClassifiedRepository.GetWithRawSql("select * from TAC_Classified c Join TAC_ClassifiedContact cc ON c.ClassifiedId=cc.ClassifiedId where CategoryId=@categoryId order by PostedDate DESC", new SqlParameter("@categoryId", Convert.ToInt32(categoryvalue)));
                     ViewBag.CatagoryName = categoryName;
                 }
-                else
-                {
-                    Model.classifiedList = uw.ClassifiedRepository.GetWithRawSql("select * from TAC_Classified c Join TAC_ClassifiedContact cc ON c.ClassifiedId=cc.ClassifiedId order by PostedDate DESC");
-                }
+                //else
+                //{
+                //    Model.classifiedList = uw.ClassifiedRepository.GetWithRawSql("select * from TAC_Classified c Join TAC_ClassifiedContact cc ON c.ClassifiedId=cc.ClassifiedId order by PostedDate DESC");
+                //}
 
             }
             catch (Exception ex)
@@ -48,8 +47,8 @@ namespace TAClassifieds.Controllers
         {
             try
             {
-                UnitOfWork uw = new UnitOfWork();
-                Model = uw.ClassifiedRepository.GetByID(classifiedId);
+
+                Model = ClassifiedBAL.GetClassifiedByIdBAL(Model, classifiedId);
                 ViewBag.PostedDate = Convert.ToDateTime(Model.PostedDate).ToString("MMMM-dd-yyyy");
             }
             catch(Exception ex)

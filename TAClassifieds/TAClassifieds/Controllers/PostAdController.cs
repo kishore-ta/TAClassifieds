@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TAClassifieds.Model;
+using TAClassifieds.BAL;
 
 namespace TAClassifieds.Controllers
 {
@@ -14,7 +15,7 @@ namespace TAClassifieds.Controllers
         // GET: /PostAd/
         public ActionResult Index()
         {
-            return View();
+            return View("PostAd");
         }
 
         [HttpGet]
@@ -22,8 +23,9 @@ namespace TAClassifieds.Controllers
         {
             try
             {
-                UnitOfWork uw = new UnitOfWork();
-                Model.categoriesList = uw.CategoryRepository.Get().ToList();
+                //To Get Categories of Ads
+                Model = ClassifiedBAL.GetCategoriesBAL(Model);
+
             }
             catch (Exception ex)
             {
@@ -36,46 +38,15 @@ namespace TAClassifieds.Controllers
         [ActionName("PostAd")]
         public ActionResult PostAdClassifiedVM(ClassifiedContactVM Model, string categoryvalue, HttpPostedFileBase file)
         {
-            try
+            int excFlag = 0;
+            //To Post the Ad informarmation which is entered by user.
+            excFlag = ClassifiedBAL.PostAdBAL(Model, categoryvalue, file);
+
+            if (excFlag > 0)
             {
-                var path = string.Empty;
-                var strPath = string.Empty;
-                UnitOfWork uw = new UnitOfWork();
-
-                Classified objClassified = new Classified();
-                objClassified.CategoryId = Convert.ToInt16(categoryvalue);
-                objClassified.ClassifiedTitle = Model.ClassifiedTitle;
-                objClassified.Description = Model.Description;
-
-                if (file != null && file.ContentLength > 0)
-                {
-                    // extract only the filename
-                    var fileName = Path.GetFileName(file.FileName);
-                    // store the file inside ~/BrowseImages folder
-                    strPath = "/BrowseImages/" + Guid.NewGuid() + "-" + fileName;
-                    path = Server.MapPath(strPath);
-                    file.SaveAs(path);
-                    objClassified.ClassifiedImage = strPath;
-                }
-
-                objClassified.ClassifiedPrice = Convert.ToInt32(Model.ClassifiedPrice);
-                objClassified.Summary = Model.Description;
-                objClassified.PostedDate = DateTime.Now;
-                objClassified.CreatedBy = Guid.Parse("aa968550-1c9e-483b-95d5-c12eab243024");
-
-                ClassifiedContact objContact = Model.classifiedsContacts;
-
-                Classified cls = uw.ClassifiedRepository.Insert(objClassified);
-                objContact.ClassifiedId = cls.ClassifiedId;
-
-                uw.ClassifiedContactRepository.Insert(objContact);
-                uw.Save();
+                ViewBag.successMessage = "Your Ad created successfully.";
             }
-            catch(Exception ex)
-            {
-
-            }
-            return RedirectToAction("GetAd", "Home");
+            return RedirectToAction("PostAd");
         }
     }
 }

@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <html>
-<head>   
+<head>
 
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/jquery.min.js"></script>
@@ -31,13 +31,13 @@
             $(".image-box").on("click", function (event) {
                 var selected = "#" + $(this).attr("id");
                 $(selected).toggleClass("image-selected");
-                $('.image-box').not(this).removeClass('image-selected'); 
+                $('.image-box').not(this).removeClass('image-selected');
                 $(".categoryName").text($(this).attr("title"));
                 $("#hdnCategoryID").val($(this).attr("id"));
-                
+
             });
 
-            $("#create-btn").click(function () {              
+            $("#create-btn").click(function () {
                 if ($("#hdnCategoryID").val() == "") {
                     alert("Please Select Ad Category Image.");
                     return false;
@@ -57,10 +57,10 @@
                     }
                 }
             });
-           
+
         });
     </script>
-   
+
 </head>
 
 <body>
@@ -90,10 +90,10 @@
                     <form class="form-horizontal form-signin form-margin" role="form">
                         <div class="form-group">
                             @Html.LabelFor(model => model.ClassifiedTitle, htmlAttributes: new { @class = "control-label col-sm-4" })
-                            <div class="col-sm-6">                             
-                                
+                            <div class="col-sm-6">
+
                                 <input type="hidden" id="hdnCategoryID" name="categoryvalue" />
-                                @Html.TextBoxFor(model => model.ClassifiedTitle, new { id = "adTitle", @class = "form-control", placeholder = "Give the Title for your ad here",required=true })
+                                @Html.TextBoxFor(model => model.ClassifiedTitle, new { id = "adTitle", @class = "form-control", placeholder = "Give the Title for your ad here", required = true })
                                 @*@Html.ValidationMessageFor(model => model.ClassifiedTitle, "", new { @class = "text-danger" })*@
                             </div>
                         </div>
@@ -108,7 +108,7 @@
                         <div class="form-group">
                             <label class="control-label col-sm-4" for="uploadPic">Upload photos</label>
                             <div class="col-xs-6">
-                                <input name="file" type="file" onchange="readURL(this);" id="uploadPic"/>
+                                <input name="file" type="file" onchange="readURL(this);" id="uploadPic" />
                                 <img id="pic" src="#" alt="your image" width="100px" height="100px" />
                             </div>
                         </div>
@@ -145,7 +145,8 @@
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-4 col-sm-12">
-                                 <button id="create-btn" type="submit" class="btn btn-default btn-success">Post Ad</button>                             
+                                <button id="create-btn" type="submit" class="btn btn-default btn-success">Post Ad</button>   <br />
+                                <span style="color:green;"> @ViewBag.successMessage;</span>
                             </div>
                         </div>
                     </form>
@@ -156,5 +157,4 @@
     }
 </body>
 </html>
-
 
