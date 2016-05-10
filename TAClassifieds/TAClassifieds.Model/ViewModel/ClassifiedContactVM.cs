@@ -45,5 +45,8 @@ namespace TAClassifieds.Model
 
         public IEnumerable<Category> categoriesList { get; set; }
         public IEnumerable<Classified> classifiedList { get; set; }
+
+        public IEnumerable<string> Items { get; set; }
+        public Pager Pager { get; set; }
     }
 }

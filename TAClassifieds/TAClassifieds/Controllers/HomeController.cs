@@ -18,7 +18,7 @@ namespace TAClassifieds.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetAd(ClassifiedContactVM Model, string categoryvalue, string categoryName)
+        public ActionResult GetAd(ClassifiedContactVM Model, string categoryvalue, string categoryName, int? page)
         {
             try
             {
@@ -29,11 +29,12 @@ namespace TAClassifieds.Controllers
                 {
                     ViewBag.CatagoryName = categoryName;
                 }
-                //else
-                //{
-                //    Model.classifiedList = uw.ClassifiedRepository.GetWithRawSql("select * from TAC_Classified c Join TAC_ClassifiedContact cc ON c.ClassifiedId=cc.ClassifiedId order by PostedDate DESC");
-                //}
 
+                //Pagination
+                var dummyItems = Model.classifiedList; 
+                var pager = new Pager(dummyItems.Count(), page);
+                Model.classifiedList = dummyItems.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize);
+                Model.Pager = pager;
             }
             catch (Exception ex)
             {
@@ -47,11 +48,10 @@ namespace TAClassifieds.Controllers
         {
             try
             {
-
                 Model = ClassifiedBAL.GetClassifiedByIdBAL(Model, classifiedId);
                 ViewBag.PostedDate = Convert.ToDateTime(Model.PostedDate).ToString("MMMM-dd-yyyy");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }

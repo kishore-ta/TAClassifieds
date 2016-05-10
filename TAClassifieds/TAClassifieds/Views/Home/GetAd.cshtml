@@ -17,8 +17,8 @@
                 $('.image-box').not(this).removeClass('image-selected');
                 $(".categoryName").text($(this).attr("title"));
                 $("#hdnCategoryID").val($(this).attr("id"));
-                $("#hdnCategoryName").text($(this).attr("title"));               
-          
+                $("#hdnCategoryName").text($(this).attr("title"));
+
             });
         });
     </script>
@@ -68,7 +68,7 @@
                         </tr>
                     }
                 </table>
-                <ul class="pagination pull-right">
+                @*<ul class="pagination pull-right">
                     <li><a href="#">&laquo;</a></li>
                     <li><a href="#">1</a></li>
                     <li><a href="#">2</a></li>
@@ -76,7 +76,41 @@
                     <li><a href="#">4</a></li>
                     <li><a href="#">5</a></li>
                     <li><a href="#">&raquo;</a></li>
-                </ul>
+                </ul>*@
+
+                <!-- pager -->
+                @if (Model.Pager.EndPage > 1)
+                {
+                    <ul class="pagination pull-right">
+                        @if (Model.Pager.CurrentPage > 1)
+                        {
+                            <li>
+                                <a href="~/Home/GetAd">First</a>
+                            </li>
+                            <li>
+                                <a href="~/Home/GetAd?page=@(Model.Pager.CurrentPage - 1)">Previous</a>
+                            </li>
+                        }
+
+                        @for (var page = Model.Pager.StartPage; page <= Model.Pager.EndPage; page++)
+                        {
+                            <li class="@(page == Model.Pager.CurrentPage ? "active" : "")">
+                                <a href="~/Home/GetAd?page=@page">@page</a>
+                            </li>
+                        }
+
+                        @if (Model.Pager.CurrentPage < Model.Pager.TotalPages)
+                        {
+                            <li>
+                                <a href="~/Home/GetAd?page=@(Model.Pager.CurrentPage + 1)">Next</a>
+                            </li>
+                            <li>
+                                <a href="~/Home/GetAd?page=@(Model.Pager.TotalPages)">Last</a>
+                            </li>
+                        }
+                    </ul>
+                }
+
             </div>
         </div>
     }
