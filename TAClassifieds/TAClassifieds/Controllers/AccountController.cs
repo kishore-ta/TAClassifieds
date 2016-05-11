@@ -11,10 +11,10 @@ using Microsoft.Owin.Security;
 using TAClassifieds.Data;
 using TAClassifieds.Model;
 using TAClassifieds.Models;
+using TAClassifieds.BAL;
 
 namespace TAClassifieds.Controllers
 {
-    [Authorize]
     public class AccountController : Controller
     {
         public AccountController()
@@ -46,35 +46,54 @@ namespace TAClassifieds.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public ActionResult Login(User model, string returnUrl, bool Rememberme = false)
         {
-
-            UnitOfWork uw = new UnitOfWork();
-            var tab = uw.CategoryRepository.Get().ToList();
-
-            ////add category
-            //var cat = new Category() {CategoryName = "bla bla", CategoryImage = "img"};
-          
-            //uw.CategoryRepository.Insert(cat);
-            //uw.Save();
-            
-            if (ModelState.IsValid)
+            if (model.Email != null && model.UPassword != null && Rememberme != false)
             {
-                var user = await UserManager.FindAsync(model.UserName, model.Password);
-                if (user != null)
+                //var user = await UserManager.FindAsync(model.Email, model.UPassword);
+                AccountBL userverification = new AccountBL();
+                if (userverification.UserVerification(model))
                 {
-                    await SignInAsync(user, model.RememberMe);
-                    return RedirectToLocal(returnUrl);
+                    AccountBL loggedinuser = new AccountBL();
+                    bool status = loggedinuser.UserProfileStatus(model.Email);
+                    if (status)
+                    {
+                        return RedirectToLocal(returnUrl);
+                    }
+                    else
+                    {
+                        // ViewBag.UpdationMessage = "Please update your profile to proceed further";
+                        return RedirectToAction("UpdateProfile", "Account", new { email = model.Email });
+                    }
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Invalid username or password.");
+                    ViewBag.ErrorMsg = "Invalid credentials";
                 }
+
+                //if (user != null)
+                //{
+                //    await SignInAsync(user, model.RememberMe);
+                //AccountBL loggedinuser = new AccountBL();
+                //bool status = loggedinuser.UserProfileStatus(model.Email);
+                //if (status)
+                //{
+                //    return RedirectToLocal(returnUrl);
+                //}
+                //else
+                //{
+                //    ViewBag.UpdationMessage = "Please update your profile to proceed further";
+                //    return RedirectToAction("UpdateProfile",model.Email);
+                //}
+                //    return RedirectToLocal(returnUrl);
+                //}
+
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+
 
         //
         // GET: /Account/Register
@@ -84,30 +103,62 @@ namespace TAClassifieds.Controllers
             return View();
         }
 
-        //
-        // POST: /Account/Register
-        [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        [HttpPost]
+        public ActionResult Register(User model, string ConfirmPassword, bool Terms = false)
         {
-            if (ModelState.IsValid)
+            if (model.Email != null && model.UPassword != null && Terms != false)
             {
-                var user = new ApplicationUser() { UserName = model.UserName };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                if (model.UPassword.Equals(ConfirmPassword))
                 {
-                    await SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    AccountBL newuser = new AccountBL();
+                    bool status = newuser.UserRegistration(model);
+                    if (status)
+                    {
+                        ViewBag.Email = "Confirmation mail has been sent to your given Email.";
+                        return View();
+                    }
+                    else
+                    {
+                        ViewBag.UserExists = "Email Id is already registered.";
+                        return View();
+                    }
                 }
                 else
                 {
-                    AddErrors(result);
+                    ViewBag.PwdMatch = "Password and Repeat Password doesnt match.";
+                    return View(model);
                 }
             }
-
-            // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        [AllowAnonymous]
+        public ActionResult Confirmation()
+        {
+            Guid UserId = Guid.Parse(Request.QueryString["id"]);
+            AccountBL confirmeduser = new AccountBL();
+            confirmeduser.Confirmation(UserId);
+            return RedirectToAction("Login", "Account");
+        }
+        //[ValidateAntiForgeryToken]
+        //[AllowAnonymous]
+
+        [HttpGet]
+        public ActionResult UpdateProfile(String email)
+        {
+            ViewData["email"] = email;
+            return View();
+        }
+
+
+        [HttpPost]
+        public ActionResult UpdateProfile(User profile, string email)
+        {
+            profile.Email = email;
+            AccountBL updateuser = new AccountBL();
+            updateuser.UpdateProfile(profile);
+            return RedirectToAction("Index", "Home");
         }
 
         //

@@ -1,0 +1,94 @@
+﻿@model TAClassifieds.Model.User
+@*@{
+        ViewBag.Title = "Register";
+    }
+
+    <h2>@ViewBag.Title.</h2>*@
+<div class="row">
+    <div class="logincontainer">
+        <h2>Your Profile.</h2>
+        <h3>@ViewBag.UpdationMessage</h3>
+        @using (Html.BeginForm("UpdateProfile", "Account", FormMethod.Post, new { @class = "form-horizontal form-signin form-margin", role = "form" }))
+        {
+            @Html.AntiForgeryToken()           
+            @Html.ValidationSummary()
+            <div class="form-group">
+                    @Html.Label("Email*", new { @class = "control-label col-sm-4" })
+                    <div class="col-sm-6">                       
+                        @Html.TextBox("Email", ViewData["email"].ToString(), new { @class = "form-control", placeholder = "Enter your email id" })                       
+                    </div>
+                </div>
+            <div class="form-group">
+                @Html.Label("First Name*", new { @class = "control-label col-sm-4" })
+                <div class="col-sm-6">
+                    @Html.TextBoxFor(m => m.First_Name, new { @class = "form-control", placeholder = "Enter your First Name" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Last Name*", new { @class = "control-label col-sm-4" })
+                <div class="col-sm-6">
+                    @Html.TextBoxFor(m => m.Last_Name, new { @class = "form-control", placeholder = "Enter your Last Name" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("Gender*", new { @class = "control-label col-sm-4" })
+                <div class="col-sm-6">
+                    @Html.RadioButtonFor(m => m.Gender, new { @class = "form-control" }, "1") Male
+                    @Html.RadioButtonFor(m => m.Gender, new { @class = "form-control" }, "0") Female                 
+                   
+                </div>
+            </div>
+            //DOB @Html.DateTimePickerFor
+            <div class="form-group">
+                @Html.Label("Address1", new { @class = "control-label col-sm-4" })
+                <div class="col-sm-6">
+                    @Html.TextBoxFor(m => m.Address1, new { @class = "form-control", placeholder = "Address Line1" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Address2", new { @class = "control-label col-sm-4" })
+                <div class="col-sm-6">
+                    @Html.TextBoxFor(m => m.Address2, new { @class = "form-control", placeholder = "Address Line2" })
+                </div>
+            </div>
+            //city
+            <div class="form-group">
+                @Html.Label("City", new { @class = "control-label col-sm-4" })
+                <div class="col-sm-6">
+                    @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "Enter your City" })
+                </div>
+            </div>
+            //state
+            <div class="form-group">
+                @Html.Label("State", new { @class = "control-label col-sm-4" })
+                <div class="col-sm-6">
+                    @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "Enter your State" })
+                </div>
+            </div>
+            //country
+            <div class="form-group">
+                @Html.Label("Country", new { @class = "control-label col-sm-4" })
+                <div class="col-sm-6">
+                    @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "Enter your Country" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("Phone", new { @class = "control-label col-sm-4" })
+                <div class="col-sm-6">
+                    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "Enter your Phone Number" })
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-12">
+                        <input type="submit" class="btn btn-md btn-primary" value="Update" />
+                    </div>
+                </div>                
+            </div>
+        }
+        </div>
+    </div>
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
