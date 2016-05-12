@@ -50,13 +50,15 @@ namespace TAClassifieds.Controllers
         {
             if (model.Email != null && model.UPassword != null && Rememberme != false)
             {
+                //ModelState.Clear();
                 //var user = await UserManager.FindAsync(model.Email, model.UPassword);
                 AccountBL userverification = new AccountBL();
-                if (userverification.UserVerification(model))
+                var usermodel = userverification.UserVerification(model);
+                if (usermodel != null)
                 {
                     AccountBL loggedinuser = new AccountBL();
-                    bool status = loggedinuser.UserProfileStatus(model.Email);
-                    if (status)
+                    //bool status = loggedinuser.UserProfileStatus(model.Email);
+                    if (TryValidateModel(usermodel))
                     {
                         return RedirectToLocal(returnUrl);
                     }
@@ -70,27 +72,8 @@ namespace TAClassifieds.Controllers
                 {
                     ViewBag.ErrorMsg = "Invalid credentials";
                 }
-
-                //if (user != null)
-                //{
-                //    await SignInAsync(user, model.RememberMe);
-                //AccountBL loggedinuser = new AccountBL();
-                //bool status = loggedinuser.UserProfileStatus(model.Email);
-                //if (status)
-                //{
-                //    return RedirectToLocal(returnUrl);
-                //}
-                //else
-                //{
-                //    ViewBag.UpdationMessage = "Please update your profile to proceed further";
-                //    return RedirectToAction("UpdateProfile",model.Email);
-                //}
-                //    return RedirectToLocal(returnUrl);
-                //}
-
             }
-
-            // If we got this far, something failed, redisplay form
+              
             return View(model);
         }
 
@@ -105,8 +88,10 @@ namespace TAClassifieds.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult Register(User model, string ConfirmPassword, bool Terms = false)
+
+        public ActionResult Register([Bind(Exclude = "First_Name,Last_Name")]User model, string ConfirmPassword, bool Terms = false)
         {
+            //ModelState.Clear();
             if (model.Email != null && model.UPassword != null && Terms != false)
             {
                 if (model.UPassword.Equals(ConfirmPassword))
@@ -141,21 +126,18 @@ namespace TAClassifieds.Controllers
             confirmeduser.Confirmation(UserId);
             return RedirectToAction("Login", "Account");
         }
-        //[ValidateAntiForgeryToken]
-        //[AllowAnonymous]
-
+        
         [HttpGet]
         public ActionResult UpdateProfile(String email)
         {
             ViewData["email"] = email;
             return View();
         }
-
-
+        
         [HttpPost]
-        public ActionResult UpdateProfile(User profile, string email)
+        public ActionResult UpdateProfile(User profile, string Email)
         {
-            profile.Email = email;
+            profile.Email = Email;
             AccountBL updateuser = new AccountBL();
             updateuser.UpdateProfile(profile);
             return RedirectToAction("Index", "Home");

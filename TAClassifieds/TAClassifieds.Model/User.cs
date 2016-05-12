@@ -15,8 +15,10 @@ namespace TAClassifieds.Model
         public System.Guid UserId { get; set; }
         public string Email { get; set; }
         public string UPassword { get; set; }
+        [Required]
         [Column("First Name")]
         public string First_Name { get; set; }
+        [Required]
         [Column("Last Name")]
         public string Last_Name { get; set; }
         public Nullable<bool> Gender { get; set; }
