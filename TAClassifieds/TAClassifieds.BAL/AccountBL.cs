@@ -33,19 +33,19 @@ namespace TAClassifieds.BAL
             }
         }
 
-        public Boolean UserVerification(User model)
+        public User UserVerification(User model)
         {
             UnitOfWork uw = new UnitOfWork();
             string password = Encryption(model.UPassword);
-            IEnumerable<User> u = uw.UserRepository.Get(c => c.Email == model.Email && c.UPassword==password);
-            if (u.Count() == 1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return uw.UserRepository.Get(c => c.Email == model.Email && c.UPassword==password).FirstOrDefault();
+            //if (u.Count() == 1)
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
         }
 
         public Boolean UserProfileStatus(string email)
@@ -53,7 +53,7 @@ namespace TAClassifieds.BAL
            
             IEnumerable<User> u = uw.UserRepository.Get(c => c.Email == email);
             var e = u.FirstOrDefault();
-            if (e.First_Name != null && e.Last_Name != null && e.Gender != null)
+            if (e.First_Name != null && e.Last_Name != null)
             {
                 return true;
             }
@@ -74,7 +74,10 @@ namespace TAClassifieds.BAL
            // op.Email = model.Email;
             op.First_Name = model.First_Name;
             op.Last_Name = model.Last_Name;
-            op.Address1 = model.Address1;             
+            op.Address1 = model.Address1;
+            op.Gender = model.Gender;
+            op.DOB = model.DOB;
+                       
             uw.UserRepository.Update(op);
             //uw._context.Users.Attach(op);            
             //uw._context.Entry(op).State = EntityState.Modified;
