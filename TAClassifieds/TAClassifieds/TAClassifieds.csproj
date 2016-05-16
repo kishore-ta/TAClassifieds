@@ -39,6 +39,44 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Facebook">
+      <HintPath>..\..\..\..\Resources\OAuth-FB\FBAuth\FBAuth\bin\Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="FBAuth">
+      <HintPath>..\..\..\..\Resources\OAuth-FB\FBAuth\FBAuth\bin\FBAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis, Version=1.9.1.12395, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Resources\OAuth-FB\gplus-quickstart-csharp-master\gplus-quickstart-csharp-master\gplus-quickstart-csharp\bin\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth, Version=1.9.1.12395, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Resources\OAuth-FB\gplus-quickstart-csharp-master\gplus-quickstart-csharp-master\gplus-quickstart-csharp\bin\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.9.1.12399, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Resources\OAuth-FB\gplus-quickstart-csharp-master\gplus-quickstart-csharp-master\gplus-quickstart-csharp\bin\Google.Apis.Auth.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.9.1.12394, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Resources\OAuth-FB\gplus-quickstart-csharp-master\gplus-quickstart-csharp-master\gplus-quickstart-csharp\bin\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Oauth2.v2, Version=1.9.0.92, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Resources\OAuth-FB\gplus-quickstart-csharp-master\gplus-quickstart-csharp-master\gplus-quickstart-csharp\bin\Google.Apis.Oauth2.v2.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.9.1.12397, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Resources\OAuth-FB\gplus-quickstart-csharp-master\gplus-quickstart-csharp-master\gplus-quickstart-csharp\bin\Google.Apis.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Plus.v1, Version=1.9.0.223, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Resources\OAuth-FB\gplus-quickstart-csharp-master\gplus-quickstart-csharp-master\gplus-quickstart-csharp\bin\Google.Apis.Plus.v1.dll</HintPath>
+    </Reference>
+    <Reference Include="GPlusQuickstartCsharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Resources\OAuth-FB\gplus-quickstart-csharp-master\gplus-quickstart-csharp-master\gplus-quickstart-csharp\bin\GPlusQuickstartCsharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin">
       <HintPath>..\packages\Microsoft.Owin.2.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
@@ -165,7 +203,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PostAdController.cs" />
-    <Compile Include="Controllers\socialLoginController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -295,7 +332,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

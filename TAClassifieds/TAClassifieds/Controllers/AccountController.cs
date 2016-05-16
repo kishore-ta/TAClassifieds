@@ -11,12 +11,37 @@ using Microsoft.Owin.Security;
 using TAClassifieds.Data;
 using TAClassifieds.Model;
 using TAClassifieds.Models;
+using System.Text;
+using System.Security.Cryptography;
+using System.Net.Mail;
 using TAClassifieds.BAL;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Plus.v1;
+using Google.Apis.Auth.OAuth2.Responses;
+using Google.Apis.Auth.OAuth2.Flows;
+using System.Threading;
+using Google.Apis.Oauth2.v2;
+using Google.Apis.Plus.v1.Data;
+using Google.Apis.Oauth2.v2.Data;
+using System.Security.Principal;
+using System.Configuration;
+using System.Net;
+using System.IO;
+using Facebook;
+using Newtonsoft.Json;
 
 namespace TAClassifieds.Controllers
 {
+    public class jsonProfile
+    {
+        public string name { get; set; }
+        public string id { get; set; }
+        public string email { get; set; }
+    }
+
     public class AccountController : Controller
     {
+
         public AccountController()
             : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
         {
@@ -393,6 +418,121 @@ namespace TAClassifieds.Controllers
                 UserManager = null;
             }
             base.Dispose(disposing);
+        }
+
+        [AllowAnonymous]
+        public ActionResult gplusLogin()
+        {
+            User userDetails = new User();
+            ClientSecrets secrets = new ClientSecrets()
+            {
+                ClientId = ConfigurationManager.AppSettings["gplus-client-id"],
+                ClientSecret = ConfigurationManager.AppSettings["gplus-client-secret"]
+            };
+            string[] SCOPES = { PlusService.Scope.PlusLogin, PlusService.Scope.UserinfoEmail };
+            TokenResponse token;
+            PlusService ps = null;
+
+            IAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
+            {
+                ClientSecrets = secrets,
+                Scopes = SCOPES
+            });
+
+            if (Request["code"] == null)
+            {
+                string url =
+                    "https://accounts.google.com/o/oauth2/auth?redirect_uri=http://localhost:57864/Account/gplusLogin&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email&openid.realm=&client_id=465360611509-vamhmig2ki8ba7t10ljq7c3p8bq7l06f.apps.googleusercontent.com&access_type=offline&approval_prompt=force";
+                Response.Redirect(url);
+            }
+            else
+            {
+                token = flow.ExchangeCodeForTokenAsync("", Request["code"], "http://localhost:57864/Account/gplusLogin",
+                          CancellationToken.None).Result;
+                // Get tokeninfo for the access token if you want to verify.
+                Oauth2Service service = new Oauth2Service(
+                    new Google.Apis.Services.BaseClientService.Initializer());
+                Oauth2Service.TokeninfoRequest request = service.Tokeninfo();
+                request.AccessToken = token.AccessToken;
+
+                Tokeninfo info = request.Execute();
+                string gplus_id = info.UserId;
+
+                UserCredential gplusUserCredential = new UserCredential(flow, "me", token);
+                ps = new PlusService(
+                    new Google.Apis.Services.BaseClientService.Initializer()
+                    {
+                        ApplicationName = "TA-Classifieds",
+                        HttpClientInitializer = gplusUserCredential
+                    });
+
+                Person some = ps.People.Get("me").Execute();
+
+                userDetails.First_Name = some.Name.GivenName;
+                userDetails.Last_Name = some.Name.FamilyName;
+                userDetails.Email = some.Emails[0].Value;
+
+                User userModel = new Model.User();
+                userModel.Email = some.Emails[0].Value;
+                userModel.UPassword = "Dummy Password";
+                AccountBL bl = new BAL.AccountBL();
+                bl.UserRegistration(userModel);
+
+            }
+
+            return RedirectToAction("UpdateProfile", "Account", new { email = userDetails.Email, firstName = userDetails.First_Name, lastName = userDetails.Last_Name });
+        }
+
+        
+        [AllowAnonymous]
+        public ActionResult fbLogin()
+        {
+
+            if (Request["code"] != null)
+            {
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                string url =
+                    string.Format(
+                        "https://graph.facebook.com/oauth/access_token?client_id={0}&redirect_uri=http://localhost:49540/Account/fbLogin&scope={1}&code={2}&client_secret={3}",
+                        ConfigurationManager.AppSettings["fb-app-id"],
+                        ConfigurationManager.AppSettings["fb-scope"],
+                        Request["code"].ToString(),
+                        ConfigurationManager.AppSettings["fb-app-secret"]);
+
+                HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                {
+                    StreamReader reader = new StreamReader(response.GetResponseStream());
+                    string vals = reader.ReadToEnd();
+
+                    foreach (var token in vals.Split('&'))
+                    {
+                        dic.Add(token.Substring(0, token.IndexOf("=")), token.Substring(token.IndexOf("=") + 1, token.Length - token.IndexOf("=") - 1));
+                    }
+                    string access_token = dic["access_token"];
+                    var client = new FacebookClient(access_token);
+                    var obj = client.Get("/me");
+                    jsonProfile user = JsonConvert.DeserializeObject<jsonProfile>(obj.ToString());
+                    var profClient = new FacebookClient(access_token);
+                    var profDetails = profClient.Get("/me?fields=email");
+                    jsonProfile email = JsonConvert.DeserializeObject<jsonProfile>(profDetails.ToString());
+                    var name = user.name;
+                    var Email = email.email;
+
+                    User userModel = new Model.User();
+                    userModel.Email = Email;
+                    userModel.UPassword = "Dummy Password";
+                    AccountBL bl = new BAL.AccountBL();
+                    bl.UserRegistration(userModel); 
+
+                    return RedirectToAction("UpdateProfile", "Account", new { email = Email, firstName = name,lastName=""});
+                }
+            }
+
+            Response.Redirect(string.Format("https://graph.facebook.com/oauth/authorize?client_id={0}&redirect_uri={1}&scope={2}",
+            ConfigurationManager.AppSettings["fb-app-id"], Request.Url.AbsoluteUri, ConfigurationManager.AppSettings["fb-scope"]));
+
+            return RedirectToAction("login", "Account");
         }
 
         #region Helpers

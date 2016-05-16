@@ -8,7 +8,6 @@ using TAClassifieds.Model;
 using System.Security.Cryptography;
 using System.Net.Mail;
 using System.Web;
-using System.Data.Entity;
 
 namespace TAClassifieds.BAL
 {
