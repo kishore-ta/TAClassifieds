@@ -43,6 +43,7 @@
     <Compile Include="Category.cs" />
     <Compile Include="Classified.cs" />
     <Compile Include="ClassifiedContact.cs" />
+    <Compile Include="jsonProfile.cs" />
     <Compile Include="Pager.cs" />
     <Compile Include="ViewModel\ClassifiedContactVM.cs" />
     <Compile Include="Country.cs" />

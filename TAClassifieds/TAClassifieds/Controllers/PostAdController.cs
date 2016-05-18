@@ -9,6 +9,7 @@ using TAClassifieds.BAL;
 
 namespace TAClassifieds.Controllers
 {
+    [Authorize]
     public class PostAdController : Controller
     {
         //

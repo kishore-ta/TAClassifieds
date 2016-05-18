@@ -4,11 +4,18 @@
     }
 
     <h2>@ViewBag.Title.</h2>*@
-<div class="row">
-    <div class="logincontainer">
-        <h2>Log In:</h2>
-        @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-horizontal form-signin form-margin", role = "form" }))
+
+        @if (ViewBag.error == "You are already Logged In.!")
         {
+           <h1 style="color:red">@ViewBag.error</h1>
+        }
+        @if (ViewBag.error ==null)
+        {
+            <div class="row">
+                <div class="logincontainer">
+                    <h2>Log In:</h2>
+            @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-horizontal form-signin form-margin", role = "form" }))
+            {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary()
             <div class="form-group">
@@ -23,7 +30,7 @@
                 <div class="col-sm-6">
                     @Html.PasswordFor(m => m.UPassword, new { @class = "form-control", placeholder = "Enter Password" })
                 </div>
-            </div>            
+            </div>
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-10">
                     <div class="checkbox">
@@ -32,29 +39,31 @@
                     </div>
                 </div>
             </div>
-            
-       <form class="form-horizontal form-signin socialForm-margin" role="form" name="socialLogin">
-            <div class="form-group">
-                <div class="col-sm-offset-1 col-sm-10">
-                    @Html.ActionLink("Login With GooglePlus", "gplusLogin","Account")
-                </div>
-                <div class="col-sm-offset-1 col-sm-10">
-                       @Html.ActionLink("Login With Facebook", "fbLogin", "Account")
-                </div>
-            </div>
-        </form>
-            
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-12">
                     <input type="submit" class="btn btn-md btn-primary" value="Log In" />
                 </div>
             </div>
+
+            <form class="form-horizontal form-signin socialForm-margin" role="form" name="socialLogin">
+                <div class="form-group">
+                    <div class="col-sm-offset-1 col-sm-5">
+                        @Html.ActionLink("Login With GooglePlus", "gplusLogin", "Account")
+                    </div>
+                    <div class="col-sm-offset-1 col-sm-5">
+                        @Html.ActionLink("Login With facebook", "fbLogin", "Account")
+                    </div>
+                </div>
+            </form>
+
             <div style="text-align:center;color:red">
-                @ViewBag.UserExists<br />                
+                @ViewBag.UserExists<br />
             </div>
+            }
+            </div>
+        </div>
         }
-    </div>
-</div>
+        
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

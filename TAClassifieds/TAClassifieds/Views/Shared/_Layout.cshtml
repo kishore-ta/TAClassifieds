@@ -43,11 +43,29 @@
                     @Html.ActionLink("Post Ad", "PostAd", new { controller = "PostAd" }, new { @class = "glyphicon glyphicon-tasks alt" })
                     
                 </li>
-                <li>
+                @if (!Request.IsAuthenticated)
+                {
+                    <li>
 
-                    @Html.ActionLink("Login", "Login", new { controller = "Account" }, new { @class = "glyphicon glyphicon-user" })
-                </li>
+                        @Html.ActionLink("Login", "Login", new { controller = "Account" }, new { @class = "glyphicon glyphicon-user" })
+                    </li>
+                }
+
             </ul>
+            @if (Request.IsAuthenticated)
+            {
+                using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            @Html.ActionLink("Hello " + User.Identity.Name + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
+                        </li>
+                        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                    </ul>
+                }
+            }
             <ul class="nav navbar-nav navbar-right">
                 <li>
                     <a href="myaccount.html"><span class="glyphicon glyphicon-user" /> [Status]</a>
@@ -64,8 +82,15 @@
     <footer class="container text-center">
         <p>2016 @@Techaspect Solutions</p>
     </footer>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    @*<script src="~/scripts/jquery.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>*@
+
     <script>
         $(document).ready(function() {
             $(".image-box").on("click", function(event) {

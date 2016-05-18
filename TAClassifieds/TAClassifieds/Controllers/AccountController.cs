@@ -29,16 +29,11 @@ using System.Net;
 using System.IO;
 using Facebook;
 using Newtonsoft.Json;
+using System.Web.Security;
+using Microsoft.Owin.Security;
 
 namespace TAClassifieds.Controllers
 {
-    public class jsonProfile
-    {
-        public string name { get; set; }
-        public string id { get; set; }
-        public string email { get; set; }
-    }
-
     public class AccountController : Controller
     {
 
@@ -62,6 +57,8 @@ namespace TAClassifieds.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            if(Request.IsAuthenticated)
+            { ViewBag.error = "You are already Logged In.!"; }
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -71,9 +68,9 @@ namespace TAClassifieds.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(User model, string returnUrl, bool Rememberme = false)
+        public async Task<ActionResult> Login(User model, string returnUrl, bool Rememberme = false)
         {
-            if (model.Email != null && model.UPassword != null && Rememberme != false)
+            if (model.Email != null && model.UPassword != null)
             {
                 //ModelState.Clear();
                 //var user = await UserManager.FindAsync(model.Email, model.UPassword);
@@ -83,10 +80,20 @@ namespace TAClassifieds.Controllers
                 {
                     AccountBL loggedinuser = new AccountBL();
                     //bool status = loggedinuser.UserProfileStatus(model.Email);
-                    if (TryValidateModel(usermodel))
+                            
+                    //if (TryValidateModel(usermodel))
+                    if(1==1)
                     {
+                        ApplicationUser appUser = new ApplicationUser();
+                        appUser.UserName = usermodel.First_Name != null ? usermodel.First_Name : string.Empty;
+                        appUser.Id = usermodel.UserId.ToString();
+                        appUser.SecurityStamp = Guid.NewGuid().ToString();
+                        appUser.Claims.Add(new IdentityUserClaim() { ClaimType = "email", ClaimValue = usermodel.Email });
+                        appUser.Claims.Add(new IdentityUserClaim() { ClaimType = "PhoneNumber", ClaimValue = usermodel.Phone != null ? usermodel.Phone : string.Empty });
+                        await SignInAsync(appUser, Rememberme);
                         return RedirectToLocal(returnUrl);
                     }
+
                     else
                     {
                         // ViewBag.UpdationMessage = "Please update your profile to proceed further";
@@ -366,14 +373,12 @@ namespace TAClassifieds.Controllers
             return View(model);
         }
 
-        //
-        // POST: /Account/LogOff
-        [HttpPost]
+
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("GetAd", "Home");
         }
 
         //
@@ -529,11 +534,19 @@ namespace TAClassifieds.Controllers
             }
         }
 
-        private async Task SignInAsync(ApplicationUser user, bool isPersistent)
+        private async Task  SignInAsync(ApplicationUser user, bool isPersistent)
         {
+            string RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
+            string UserIdClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+            string UserNameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name";
+
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-            var identity = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
-            AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
+            ClaimsIdentity identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie, UserNameClaimType,RoleClaimType);
+            identity.AddClaim(new Claim(UserIdClaimType, user.Id, "http://www.w3.org/2001/XMLSchema#string"));
+            identity.AddClaim(new Claim(UserNameClaimType, user.UserName, "http://www.w3.org/2001/XMLSchema#string"));
+            identity.AddClaim(new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"));
+            AuthenticationManager.SignIn(new AuthenticationProperties() { 
+                IsPersistent = isPersistent,ExpiresUtc=DateTime.Now.AddHours(1) }, identity);
         }
 
         private void AddErrors(IdentityResult result)
