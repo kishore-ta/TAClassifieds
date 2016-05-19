@@ -72,7 +72,7 @@ namespace TAClassifieds.Controllers
         {
             if (model.Email != null && model.UPassword != null)
             {
-                //ModelState.Clear();
+                ModelState.Clear();
                 //var user = await UserManager.FindAsync(model.Email, model.UPassword);
                 AccountBL userverification = new AccountBL();
                 var usermodel = userverification.UserVerification(model);
@@ -81,8 +81,8 @@ namespace TAClassifieds.Controllers
                     AccountBL loggedinuser = new AccountBL();
                     //bool status = loggedinuser.UserProfileStatus(model.Email);
                             
-                    //if (TryValidateModel(usermodel))
-                    if(1==1)
+                    if (TryValidateModel(usermodel))
+                    //if(1==1)
                     {
                         ApplicationUser appUser = new ApplicationUser();
                         appUser.UserName = usermodel.First_Name != null ? usermodel.First_Name : string.Empty;
@@ -153,6 +153,10 @@ namespace TAClassifieds.Controllers
         [AllowAnonymous]
         public ActionResult Confirmation()
         {
+            //var identity = (ClaimsIdentity)User.Identity;
+            //IEnumerable<Claim> claims = identity.Claims;
+            //var guid = claims.Where(m => m.Type == "guid");
+            //var UserId = guid.FirstOrDefault().Value;
             Guid UserId = Guid.Parse(Request.QueryString["id"]);
             AccountBL confirmeduser = new AccountBL();
             confirmeduser.Confirmation(UserId);
@@ -172,9 +176,9 @@ namespace TAClassifieds.Controllers
             profile.Email = Email;
             AccountBL updateuser = new AccountBL();
             updateuser.UpdateProfile(profile);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("GetAd", "Home");
         }
-
+        
         //
         // POST: /Account/Disassociate
         [HttpPost]
@@ -545,10 +549,20 @@ namespace TAClassifieds.Controllers
             identity.AddClaim(new Claim(UserIdClaimType, user.Id, "http://www.w3.org/2001/XMLSchema#string"));
             identity.AddClaim(new Claim(UserNameClaimType, user.UserName, "http://www.w3.org/2001/XMLSchema#string"));
             identity.AddClaim(new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"));
-            AuthenticationManager.SignIn(new AuthenticationProperties() { 
-                IsPersistent = isPersistent,ExpiresUtc=DateTime.Now.AddHours(1) }, identity);
+            identity.AddClaim(new Claim("guid", user.Id));
+            foreach (var item in user.Claims)
+            {
+                identity.AddClaim(new Claim(item.ClaimType, item.ClaimValue));
+            }
+            var prop = new AuthenticationProperties();
+            prop.IsPersistent = isPersistent;
+            if (isPersistent)
+            {
+                prop.ExpiresUtc = DateTime.Now.AddHours(5);
+            }
+            AuthenticationManager.SignIn(prop, identity);
         }
-
+        
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
@@ -583,7 +597,7 @@ namespace TAClassifieds.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("GetAd", "Home");
             }
         }
 
