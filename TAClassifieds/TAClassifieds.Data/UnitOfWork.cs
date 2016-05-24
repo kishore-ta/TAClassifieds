@@ -10,6 +10,7 @@ namespace TAClassifieds.Model
 {
     public class UnitOfWork :IDisposable
     {
+        //comment
         private readonly ClassifiedsContext _context = new ClassifiedsContext();
         private GenericRepository<User> _userRepository;
         private GenericRepository<Category> _categoryRepository;

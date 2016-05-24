@@ -88,13 +88,16 @@
                 <div class="col-sm-6">
                     @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "Enter your Phone Number" })
                 </div>
+                </div>
 
                 <div class="form-group">
-                    <div class="col-sm-offset-4 col-sm-12">
+                    <div class="col-sm-offset-4 col-sm-6">
                         <input type="submit" class="btn btn-md btn-primary" value="Update" />
                     </div>
+                    <div class="col-sm-offset-4 col-sm-6">
+                        @Html.ActionLink("Cancel", "Login","Account", new {@class="btn btn-md btn-primary" })
+                    </div>
                 </div>
-            </div>
         }
     </div>
 </div>
