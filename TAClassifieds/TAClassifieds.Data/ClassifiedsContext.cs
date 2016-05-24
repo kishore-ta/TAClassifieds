@@ -13,6 +13,7 @@ namespace TAClassifieds.Data
         public DbSet<User> Users { get; set; }      
         public DbSet<Classified> Classifieds { get; set; }
         public DbSet<ClassifiedContact> ClassifiedContacts { get; set; }
+        public DbSet<VerifyToken> VerifyToken { get; set; }
     }
     
 }

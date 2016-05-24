@@ -13,6 +13,7 @@ namespace TAClassifieds.Model
         private readonly ClassifiedsContext _context = new ClassifiedsContext();
         private GenericRepository<User> _userRepository;
         private GenericRepository<Category> _categoryRepository;
+        private GenericRepository<VerifyToken> _verifyTokenRepository;
         public GenericRepository<Category> CategoryRepository
         {
             get
@@ -65,6 +66,18 @@ namespace TAClassifieds.Model
             }
         }
 
+        public GenericRepository<VerifyToken> VerifyTokenRepository
+        {
+            get
+            {
+                if (this._verifyTokenRepository == null)
+                {
+                    this._verifyTokenRepository = new GenericRepository<VerifyToken>(_context);
+                }
+                return _verifyTokenRepository;
+
+            }
+        }
         public int Save()
         {
             try

@@ -59,7 +59,16 @@ namespace TAClassifieds.Data
 
         public virtual TEntity Insert(TEntity entity)
         {
-            return dbSet.Add(entity);
+            try
+            {
+
+                return dbSet.Add(entity);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+           
         }
 
         public virtual void Delete(object id)

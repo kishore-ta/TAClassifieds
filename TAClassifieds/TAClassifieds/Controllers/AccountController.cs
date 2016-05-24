@@ -75,14 +75,13 @@ namespace TAClassifieds.Controllers
                 ModelState.Clear();
                 //var user = await UserManager.FindAsync(model.Email, model.UPassword);
                 AccountBL userverification = new AccountBL();
-                var usermodel = userverification.UserVerification(model);
+                User usermodel = userverification.UserVerification(model);
+                
                 if (usermodel != null)
                 {
+                    Session["UserId"] = usermodel.UserId;
                     AccountBL loggedinuser = new AccountBL();
-                    //bool status = loggedinuser.UserProfileStatus(model.Email);
-                            
                     if (TryValidateModel(usermodel))
-                    //if(1==1)
                     {
                         ApplicationUser appUser = new ApplicationUser();
                         appUser.UserName = usermodel.First_Name != null ? usermodel.First_Name : string.Empty;
@@ -96,8 +95,10 @@ namespace TAClassifieds.Controllers
 
                     else
                     {
+                        Session["Useremail"] = model.Email;
                         // ViewBag.UpdationMessage = "Please update your profile to proceed further";
-                        return RedirectToAction("UpdateProfile", "Account", new { email = model.Email });
+                        //return RedirectToAction("UpdateProfile", "Account", new { email = model.Email });
+                        return RedirectToAction("UpdateProfile", "Account");
                     }
                 }
                 else
@@ -121,7 +122,7 @@ namespace TAClassifieds.Controllers
         [AllowAnonymous]
         [HttpPost]
 
-        public ActionResult Register([Bind(Exclude = "First_Name,Last_Name")]User model, string ConfirmPassword, bool Terms = false)
+        public ActionResult Register(User model, string ConfirmPassword, bool Terms = false)
         {
             //ModelState.Clear();
             if (model.Email != null && model.UPassword != null && Terms != false)
@@ -132,6 +133,7 @@ namespace TAClassifieds.Controllers
                     bool status = newuser.UserRegistration(model);
                     if (status)
                     {
+                        newuser.Registration(model);
                         ViewBag.Email = "Confirmation mail has been sent to your given Email.";
                         return View();
                     }
@@ -157,23 +159,33 @@ namespace TAClassifieds.Controllers
             //IEnumerable<Claim> claims = identity.Claims;
             //var guid = claims.Where(m => m.Type == "guid");
             //var UserId = guid.FirstOrDefault().Value;
-            Guid UserId = Guid.Parse(Request.QueryString["id"]);
+            Guid TokenId = Guid.Parse(Request.QueryString["id"]);
             AccountBL confirmeduser = new AccountBL();
-            confirmeduser.Confirmation(UserId);
-            return RedirectToAction("Login", "Account");
+            if (confirmeduser.Confirmation(TokenId))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                ViewBag.LinkExpiryMsg = "Activation link has been expired. Please register again.";
+                return RedirectToAction("Register", "Account");
+            }
         }
         
         [HttpGet]
-        public ActionResult UpdateProfile(String email)
+        public ActionResult UpdateProfile()
         {
-            ViewData["email"] = email;
-            return View();
+            AccountBL updateprofile = new AccountBL();
+            Guid userId = Guid.Parse(Session["UserId"].ToString());
+            User user=updateprofile.FetchUserInfo(userId);
+            return View(user);
         }
         
         [HttpPost]
-        public ActionResult UpdateProfile(User profile, string Email)
+        public ActionResult UpdateProfile(User profile)
         {
-            profile.Email = Email;
+            Guid userId = Guid.Parse(Session["UserId"].ToString());
+            profile.UserId = userId;
             AccountBL updateuser = new AccountBL();
             updateuser.UpdateProfile(profile);
             return RedirectToAction("GetAd", "Home");

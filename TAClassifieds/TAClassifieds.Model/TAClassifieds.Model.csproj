@@ -45,6 +45,7 @@
     <Compile Include="ClassifiedContact.cs" />
     <Compile Include="jsonProfile.cs" />
     <Compile Include="Pager.cs" />
+    <Compile Include="VerifyToken.cs" />
     <Compile Include="ViewModel\ClassifiedContactVM.cs" />
     <Compile Include="Country.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
