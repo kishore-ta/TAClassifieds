@@ -185,9 +185,6 @@
     <Reference Include="System.Web.Optimization">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.1\lib\net40\System.Web.Optimization.dll</HintPath>
     </Reference>
-    <Reference Include="TAClassifieds.BAL">
-      <HintPath>..\TAClassifieds.BAL\bin\Debug\TAClassifieds.BAL.dll</HintPath>
-    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -384,6 +381,8 @@
     <Content Include="Views\PostAd\PostAd.cshtml" />
     <Content Include="Views\Home\GetAd.cshtml" />
     <Content Include="Views\Home\ClassifiedDetails.cshtml" />
+    <Content Include="Views\Account\Confirmation.cshtml" />
+    <Content Include="Views\Account\UpdateProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -398,6 +397,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TAClassifieds.BAL\TAClassifieds.BAL.csproj">
+      <Project>{1658ba7c-4083-4aa2-b9d8-a51bd7067a0b}</Project>
+      <Name>TAClassifieds.BAL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TAClassifieds.Data\TAClassifieds.Data.csproj">
       <Project>{7bd6034a-a01d-4f2d-99b5-aa013a1850e2}</Project>
       <Name>TAClassifieds.Data</Name>

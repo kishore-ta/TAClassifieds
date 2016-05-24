@@ -88,16 +88,12 @@ namespace TAClassifieds.Controllers
                         appUser.Id = usermodel.UserId.ToString();
                         appUser.SecurityStamp = Guid.NewGuid().ToString();
                         appUser.Claims.Add(new IdentityUserClaim() { ClaimType = "email", ClaimValue = usermodel.Email });
-                        appUser.Claims.Add(new IdentityUserClaim() { ClaimType = "PhoneNumber", ClaimValue = usermodel.Phone != null ? usermodel.Phone : string.Empty });
                         await SignInAsync(appUser, Rememberme);
                         return RedirectToLocal(returnUrl);
                     }
-
+                            
                     else
                     {
-                        Session["Useremail"] = model.Email;
-                        // ViewBag.UpdationMessage = "Please update your profile to proceed further";
-                        //return RedirectToAction("UpdateProfile", "Account", new { email = model.Email });
                         return RedirectToAction("UpdateProfile", "Account");
                     }
                 }
@@ -162,30 +158,45 @@ namespace TAClassifieds.Controllers
             Guid TokenId = Guid.Parse(Request.QueryString["id"]);
             AccountBL confirmeduser = new AccountBL();
             if (confirmeduser.Confirmation(TokenId))
-            {
-                return RedirectToAction("Login", "Account");
+            {   
+                ViewBag.success = "Account Activated.";
+                return View();
+                //return RedirectToAction("Login", "Account");
             }
             else
             {
-                ViewBag.LinkExpiryMsg = "Activation link has been expired. Please register again.";
-                return RedirectToAction("Register", "Account");
+                ViewBag.error = "Activation Link Expired. Please try again";
+                return View();
             }
         }
         
         [HttpGet]
         public ActionResult UpdateProfile()
         {
-            AccountBL updateprofile = new AccountBL();
-            Guid userId = Guid.Parse(Session["UserId"].ToString());
-            User user=updateprofile.FetchUserInfo(userId);
-            return View(user);
+            //AccountBL updateprofile = new AccountBL();
+            //Guid userId = Guid.Parse(Session["UserId"].ToString());
+            //User user=updateprofile.FetchUserInfo(userId);
+            String Userguid = string.Empty;
+            var identity = (ClaimsIdentity)User.Identity;
+            IEnumerable<Claim> claims = identity.Claims;
+            var userguidArray = claims.Where(m => m.Type == "guid");
+            Userguid = userguidArray.FirstOrDefault().Value;
+            AccountBL obj = new AccountBL();
+            User resUser = obj.FetchUserInfo(Guid.Parse(Userguid));
+            return View();
         }
         
         [HttpPost]
         public ActionResult UpdateProfile(User profile)
         {
-            Guid userId = Guid.Parse(Session["UserId"].ToString());
-            profile.UserId = userId;
+            //Guid userId = Guid.Parse(Session["UserId"].ToString());
+            //profile.UserId = userId;
+            String Userguid = string.Empty;
+            var identity = (ClaimsIdentity)User.Identity;
+            IEnumerable<Claim> claims = identity.Claims;
+            var userguidArray = claims.Where(m => m.Type == "guid");
+            Userguid = userguidArray.FirstOrDefault().Value;
+            profile.UserId = Guid.Parse(Userguid);
             AccountBL updateuser = new AccountBL();
             updateuser.UpdateProfile(profile);
             return RedirectToAction("GetAd", "Home");
@@ -424,7 +435,7 @@ namespace TAClassifieds.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult gplusLogin()
+        public async Task<ActionResult> gplusLogin()
         {
             User userDetails = new User();
             ClientSecrets secrets = new ClientSecrets()
@@ -476,11 +487,24 @@ namespace TAClassifieds.Controllers
                 userDetails.Email = some.Emails[0].Value;
 
                 User userModel = new Model.User();
+                userModel.IsVerified = true;
                 userModel.Email = some.Emails[0].Value;
                 userModel.UPassword = "Dummy Password";
                 AccountBL bl = new BAL.AccountBL();
                 bl.UserRegistration(userModel);
 
+                ApplicationUser appUser = new ApplicationUser();
+                appUser.UserName = some.Name.GivenName != null ? some.Name.GivenName : some.Emails[0].Value;
+                appUser.SecurityStamp = Guid.NewGuid().ToString();
+                appUser.Claims.Add(new IdentityUserClaim() { ClaimType = "email", ClaimValue = some.Emails[0].Value });
+                appUser.Claims.Add(new IdentityUserClaim() { ClaimType = "guid", ClaimValue = appUser.UserName });
+                await SignInAsync(appUser, false);
+                AccountBL loggedinuser = new AccountBL();
+                User resUser = loggedinuser.FetchUser(userModel.Email);
+                if (TryValidateModel(resUser))
+                {
+                    return RedirectToAction("GetAd", "Home");
+                }
             }
 
             return RedirectToAction("UpdateProfile", "Account", new { email = userDetails.Email, firstName = userDetails.First_Name, lastName = userDetails.Last_Name });

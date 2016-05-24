@@ -8,6 +8,10 @@
         @if (ViewBag.error == "You are already Logged In.!")
         {
            <h1 style="color:red">@ViewBag.error</h1>
+            if (Session["accountActivation"]=="Account Activated. Please login")
+            {
+                <h1 style="color:green">Account Activated. Please login</h1>
+            }
         }
         @if (ViewBag.error ==null)
         {

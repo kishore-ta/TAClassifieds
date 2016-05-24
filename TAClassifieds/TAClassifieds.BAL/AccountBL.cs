@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TAClassifieds.Data;
-using System.Threading.Tasks;
 using TAClassifieds.Model;
+using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Net.Mail;
 using System.Web;
@@ -56,7 +56,7 @@ namespace TAClassifieds.BAL
             User op = null;
             foreach (User user in u)
             {
-                if(!user.IsActive.Equals(false))
+                if (!user.IsActive.Equals(false) && (user.IsVerified.Equals(true)))
                 {
                     op = user;
                     break;
@@ -93,9 +93,10 @@ namespace TAClassifieds.BAL
         }
         public Boolean Confirmation(Guid tokenid)
         {
+
             VerifyToken vp = uw.VerifyTokenRepository.GetByID(tokenid);
             //if (vp.CreatedDate.AddHours(24)>DateTime.Now)
-            if (vp.CreatedDate.AddMinutes(1) > DateTime.Now)
+            if (vp.CreatedDate.AddHours(24) > DateTime.Now&&vp.IsUsed!=true)
             {
                 vp.TokenId = tokenid;
                 vp.IsUsed = true;

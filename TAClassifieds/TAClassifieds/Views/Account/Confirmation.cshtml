@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewBag.Title = "Confirmation";
+}
+
+@if (ViewBag.success!=null)
+{
+    <h2>@ViewBag.success</h2>
+    <h3>@Html.ActionLink("Click here to Login","Login","Account")</h3>
+}
+       @if (ViewBag.error!=null) {
+        <h2>@ViewBag.error</h2>
+}
+
+
