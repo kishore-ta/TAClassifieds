@@ -75,8 +75,7 @@ namespace TAClassifieds.Controllers
                 ModelState.Clear();
                 //var user = await UserManager.FindAsync(model.Email, model.UPassword);
                 AccountBL userverification = new AccountBL();
-                User usermodel = userverification.UserVerification(model);
-                
+                User usermodel = userverification.UserVerification(model);                
                 if (usermodel != null)
                 {
                     Session["UserId"] = usermodel.UserId;
@@ -158,10 +157,16 @@ namespace TAClassifieds.Controllers
             Guid TokenId = Guid.Parse(Request.QueryString["id"]);
             AccountBL confirmeduser = new AccountBL();
             if (confirmeduser.Confirmation(TokenId))
+<<<<<<< HEAD
             {   
                 ViewBag.success = "Account Activated.";
                 return View();
                 //return RedirectToAction("Login", "Account");
+=======
+            {
+                ViewBag.ConfirmationMsg = "Account has been activated succesfully.";
+                return RedirectToAction("Login", "Account");
+>>>>>>> 6c1b12dd71cdd591c22fe198ddf0334fc70fb44a
             }
             else
             {
