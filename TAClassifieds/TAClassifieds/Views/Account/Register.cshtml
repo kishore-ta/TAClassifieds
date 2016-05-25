@@ -18,12 +18,14 @@
                 <div class="col-sm-6">
                     
                     @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Enter your email id" })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.Label("Password*", new { @class = "control-label col-sm-4" })
                 <div class="col-sm-6">
                     @Html.PasswordFor(m => m.UPassword, new { @class = "form-control", placeholder = "Enter Password" })
+                    @Html.ValidationMessageFor(model => model.UPassword, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">

@@ -17,37 +17,63 @@ namespace TAClassifieds.BAL
         public Boolean UserRegistration(User model)
         {
             IEnumerable<User> u = uw.UserRepository.Get(c => c.Email == model.Email);
-            if (u.Count() == 0)
+            var userfromDB = u.FirstOrDefault();
+            if (userfromDB != null)
             {
+
+                if (userfromDB.IsVerified == true && userfromDB.IsActive == true)
+                {
+                    return false;
+                }
+                else
+                    return true;
+            }
+            else
                 return true;
+
+            //var isVerified = u.Where(user => !user.IsVerified.HasValue);
+
+            //return isVerified != null;
+            //if (isVerified!=null)
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
+        }
+        public void Registration(User model, Boolean isSocialLogin)
+        {
+            //check for user exist
+            var user = FetchUser(model.Email);
+            if (user != null && !user.IsVerified.HasValue)
+            {
+                //send new verification link
+                var tokenverification1 = new VerifyToken() { TokenId = Guid.NewGuid(), UserId = user.UserId, CreatedDate = DateTime.Now };
+                var userVerification1 = uw.VerifyTokenRepository.Insert(tokenverification1);
+                uw.Save();
+                if (!isSocialLogin)
+                {
+                    AccountActivation(user, userVerification1);
+                }
+
             }
             else
             {
-                bool flag = false;
-                foreach (User user in u)
+                string encryptedpwd = Encryption(model.UPassword);
+                var newuser = new User() { Email = model.Email, UPassword = encryptedpwd, UserId = Guid.NewGuid(), CreatedDate = DateTime.Now, IsVerified = model.IsVerified != null ? model.IsVerified : null, IsActive = model.IsActive != null ? model.IsActive : null };
+                var insertedUser = uw.UserRepository.Insert(newuser);
+                uw.Save();
+                var tokenverification = new VerifyToken() { TokenId = Guid.NewGuid(), UserId = newuser.UserId, CreatedDate = DateTime.Now };
+                var userVerification = uw.VerifyTokenRepository.Insert(tokenverification);
+                uw.Save();
+                if (!isSocialLogin)
                 {
-                    if (user.IsActive.Value.Equals(false))
-                    {
-                        flag = true;
-                    }
-                    else
-                    {
-                        flag = false;
-                    }
+                    AccountActivation(insertedUser, userVerification);
                 }
-                return Convert.ToBoolean(flag);
             }
-        }
-        public void Registration(User model)
-        {
-            string encryptedpwd = Encryption(model.UPassword);
-            var newuser = new User() { Email = model.Email, UPassword = encryptedpwd, UserId = Guid.NewGuid(), CreatedDate = DateTime.Now };
-            var insertedUser = uw.UserRepository.Insert(newuser);
-            uw.Save();
-            var tokenverification = new VerifyToken() { TokenId = Guid.NewGuid(), UserId = newuser.UserId, CreatedDate = DateTime.Now };
-            var userVerification = uw.VerifyTokenRepository.Insert(tokenverification);
-            uw.Save();
-            AccountActivation(insertedUser, userVerification);
+
         }
         public User UserVerification(User model)
         {
@@ -96,7 +122,7 @@ namespace TAClassifieds.BAL
 
             VerifyToken vp = uw.VerifyTokenRepository.GetByID(tokenid);
             //if (vp.CreatedDate.AddHours(24)>DateTime.Now)
-            if (vp.CreatedDate.AddHours(24) > DateTime.Now&&vp.IsUsed!=true)
+            if (vp.CreatedDate.AddMinutes(1) > DateTime.Now && vp.IsUsed != true)
             {
                 vp.TokenId = tokenid;
                 vp.IsUsed = true;
@@ -106,6 +132,7 @@ namespace TAClassifieds.BAL
                 User op = uw.UserRepository.GetByID(userid);
                 op.UserId = userid;
                 op.IsVerified = true;
+                op.IsActive = true;
                 uw.UserRepository.Update(op);
                 //uw._context.Users.Attach(op);
                 // var entry = uw._context.Entry(op);

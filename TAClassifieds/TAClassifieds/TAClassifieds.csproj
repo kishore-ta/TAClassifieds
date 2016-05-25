@@ -121,6 +121,16 @@
       <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Threading.Tasks">
+      <HintPath>..\..\..\..\Resources\OAuth-FB\gplus-quickstart-csharp-master\gplus-quickstart-csharp-master\gplus-quickstart-csharp\bin\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions">
+      <HintPath>..\..\..\..\Resources\OAuth-FB\gplus-quickstart-csharp-master\gplus-quickstart-csharp-master\gplus-quickstart-csharp\bin\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Resources\OAuth-FB\gplus-quickstart-csharp-master\gplus-quickstart-csharp-master\gplus-quickstart-csharp\bin\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -131,9 +141,6 @@
     <Reference Include="System.Net.Http.Primitives, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\System.Net.Http.Primitives.DLL</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Primitives">
-      <HintPath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Net.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -226,8 +233,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\PostAdController.cs" />
+    <Compile Include="Controllers\MyAdsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -384,14 +392,12 @@
     <Content Include="Views\Account\Manage.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\PostAd\PostAd.cshtml" />
     <Content Include="Views\Home\GetAd.cshtml" />
     <Content Include="Views\Home\ClassifiedDetails.cshtml" />
-<<<<<<< HEAD
     <Content Include="Views\Account\Confirmation.cshtml" />
-=======
->>>>>>> 6c1b12dd71cdd591c22fe198ddf0334fc70fb44a
     <Content Include="Views\Account\UpdateProfile.cshtml" />
+    <Content Include="Views\Ad\PostAd.cshtml" />
+    <Content Include="Views\MyAds\GetMyAds.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -18,7 +18,9 @@ namespace TAClassifieds.Model
         public string ContactName { get; set; }
         [DisplayName("Phone")]
         public string ContactPhone { get; set; }
+
         [DisplayName("City*")]
+        [Required]
         public string ContactCity { get; set; }
         public int ClassifiedId { get; set; }
 

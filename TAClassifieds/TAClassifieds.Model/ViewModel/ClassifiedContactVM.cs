@@ -13,7 +13,7 @@ namespace TAClassifieds.Model
         [Key]
         public int ClassifiedId { get; set; }
 
-        [Required]
+        
         [StringLength(50)]
         [DisplayName("Ad Title*")]
         public string ClassifiedTitle { get; set; }
@@ -21,19 +21,23 @@ namespace TAClassifieds.Model
         [DataType(DataType.MultilineText)]
         public string Summary { get; set; }
 
-       
         [StringLength(200)]
         [DataType(DataType.MultilineText)]
         [DisplayName("Ad Description*")]
         public string Description { get; set; }
+
+
         public string ClassifiedImage { get; set; }
 
+        
         [DisplayName("Quote Price")]
         public string ClassifiedPrice { get; set; }
 
+        
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime PostedDate { get; set; }
+
 
         public int CategoryId { get; set; }
         public virtual Category categories { get; set; }

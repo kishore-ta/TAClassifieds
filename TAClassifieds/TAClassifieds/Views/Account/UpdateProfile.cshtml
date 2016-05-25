@@ -11,20 +11,19 @@
         @using (Html.BeginForm("UpdateProfile", "Account", FormMethod.Post, new { @class = "form-horizontal form-signin form-margin", role = "form" }))
         {
             @Html.AntiForgeryToken()
-            @Html.ValidationSummary()
             <div class="form-group">
                 @Html.Label("Email*", new { @class = "control-label col-sm-4" })
                 <div class="col-sm-6">
 
                     @*@Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Enter your Email Id", @readonly = "readonly" })*@
                     @Html.Label("Email", Model.Email, new { @class = "form-control", @readonly = "readonly" })
-
                 </div>
             </div>
                 <div class="form-group">
                     @Html.Label("First Name*", new { @class = "control-label col-sm-4" })
                     <div class="col-sm-6">
                         @Html.TextBoxFor(m => m.First_Name, new { @class = "form-control", placeholder = "Enter your First Name" })
+                        @Html.ValidationMessageFor(model => model.First_Name, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
@@ -32,6 +31,7 @@
                     @Html.Label("Last Name*", new { @class = "control-label col-sm-4" })
                     <div class="col-sm-6">
                         @Html.TextBoxFor(m => m.Last_Name, new { @class = "form-control", placeholder = "Enter your Last Name" })
+                        @Html.ValidationMessageFor(model => model.Last_Name, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
@@ -67,42 +67,42 @@
                 @Html.Label("City", new { @class = "control-label col-sm-4" })
                 <div class="col-sm-6">
                     @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "Enter your City" })
+                    @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
                 </div>
             </div>
             //state
             <div class="form-group">
                 @Html.Label("State", new { @class = "control-label col-sm-4" })
                 <div class="col-sm-6">
-                    @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "Enter your State" })
+                    @Html.TextBoxFor(m => m.State, new { @class = "form-control", placeholder = "Enter your State" })
+                    @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
                 </div>
             </div>
             //country
             <div class="form-group">
                 @Html.Label("Country", new { @class = "control-label col-sm-4" })
                 <div class="col-sm-6">
-                    @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "Enter your Country" })
+                    @Html.TextBoxFor(m => m.Country, new { @class = "form-control", placeholder = "Enter your Country" })
+                    @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.Label("Phone", new { @class = "control-label col-sm-4" })
                 <div class="col-sm-6">
                     @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "Enter your Phone Number" })
+                    @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
                 </div>
-<<<<<<< HEAD
-=======
                 </div>
 
->>>>>>> 6c1b12dd71cdd591c22fe198ddf0334fc70fb44a
                 <div class="form-group">
-                    <div class="col-sm-offset-4 col-sm-6">
+                    <div class="col-sm-offset-4 col-sm-4">
                         <input type="submit" class="btn btn-md btn-primary" value="Update" />
                     </div>
-                    <div class="col-sm-offset-4 col-sm-6">
-<<<<<<< HEAD
+                    <div class="col-sm-4">
+
                         @Html.ActionLink("Cancel", "Login", "Account", new { @class = "btn btn-md btn-primary" })
-=======
-                        @Html.ActionLink("Cancel", "Login","Account", new {@class="btn btn-md btn-primary" })
->>>>>>> 6c1b12dd71cdd591c22fe198ddf0334fc70fb44a
+
+
                     </div>
                 </div>
         }

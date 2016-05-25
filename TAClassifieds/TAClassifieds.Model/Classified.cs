@@ -13,10 +13,15 @@ namespace TAClassifieds.Model
     {            
         public int CategoryId { get; set; }
         public int ClassifiedId { get; set; }
+
+        [Required]
         public string ClassifiedTitle { get; set; }
         public string Summary { get; set; }
+
+        [Required]
         public string Description { get; set; }
         public string ClassifiedImage { get; set; }
+        [Required]
         public decimal ClassifiedPrice { get; set; }
         public System.DateTime PostedDate { get; set; }
         public System.Guid CreatedBy { get; set; }

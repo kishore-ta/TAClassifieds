@@ -41,17 +41,21 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TAClassifieds.Data">
-      <HintPath>..\TAClassifieds\bin\TAClassifieds.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="TAClassifieds.Model">
-      <HintPath>..\TAClassifieds\bin\TAClassifieds.Model.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountBL.cs" />
     <Compile Include="ClassifiedBAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TAClassifieds.Data\TAClassifieds.Data.csproj">
+      <Project>{7bd6034a-a01d-4f2d-99b5-aa013a1850e2}</Project>
+      <Name>TAClassifieds.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TAClassifieds.Model\TAClassifieds.Model.csproj">
+      <Project>{301966ad-be15-4f7b-8991-5f9a0468c622}</Project>
+      <Name>TAClassifieds.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -13,7 +13,12 @@ namespace TAClassifieds.Model
     {
         [Key]
         public System.Guid UserId { get; set; }
+        [Required]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name="Password")]
         public string UPassword { get; set; }
         [Required]
         [Column("First Name")]
@@ -25,8 +30,10 @@ namespace TAClassifieds.Model
         public Nullable<System.DateTime> DOB { get; set; }
         public string Address1 { get; set; }
         public string Address2 { get; set; }
+        [Required]
         public string City { get; set; }
         public string State { get; set; }
+        [Required]
         public string Phone { get; set; }
         public Nullable<bool> IsVerified { get; set; }
         public Nullable<bool> IsLocked { get; set; }

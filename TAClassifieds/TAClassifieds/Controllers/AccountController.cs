@@ -75,19 +75,20 @@ namespace TAClassifieds.Controllers
                 ModelState.Clear();
                 //var user = await UserManager.FindAsync(model.Email, model.UPassword);
                 AccountBL userverification = new AccountBL();
-                User usermodel = userverification.UserVerification(model);                
+                User usermodel = userverification.UserVerification(model);
+                ApplicationUser appUser = addClaims(usermodel.Email, usermodel.UserId.ToString(), usermodel.First_Name!=null?usermodel.First_Name:usermodel.Email);
+                //ApplicationUser appUser = new ApplicationUser();
+                //appUser.UserName = usermodel.First_Name != null ? usermodel.First_Name : string.Empty;
+                //appUser.Id = usermodel.UserId.ToString();
+                //appUser.SecurityStamp = Guid.NewGuid().ToString();
+                //appUser.Claims.Add(new IdentityUserClaim() { ClaimType = "email", ClaimValue = usermodel.Email });
+                await SignInAsync(appUser, Rememberme);
+
                 if (usermodel != null)
                 {
-                    Session["UserId"] = usermodel.UserId;
-                    AccountBL loggedinuser = new AccountBL();
+
                     if (TryValidateModel(usermodel))
                     {
-                        ApplicationUser appUser = new ApplicationUser();
-                        appUser.UserName = usermodel.First_Name != null ? usermodel.First_Name : string.Empty;
-                        appUser.Id = usermodel.UserId.ToString();
-                        appUser.SecurityStamp = Guid.NewGuid().ToString();
-                        appUser.Claims.Add(new IdentityUserClaim() { ClaimType = "email", ClaimValue = usermodel.Email });
-                        await SignInAsync(appUser, Rememberme);
                         return RedirectToLocal(returnUrl);
                     }
                             
@@ -128,7 +129,7 @@ namespace TAClassifieds.Controllers
                     bool status = newuser.UserRegistration(model);
                     if (status)
                     {
-                        newuser.Registration(model);
+                        newuser.Registration(model,false);
                         ViewBag.Email = "Confirmation mail has been sent to your given Email.";
                         return View();
                     }
@@ -157,16 +158,9 @@ namespace TAClassifieds.Controllers
             Guid TokenId = Guid.Parse(Request.QueryString["id"]);
             AccountBL confirmeduser = new AccountBL();
             if (confirmeduser.Confirmation(TokenId))
-<<<<<<< HEAD
-            {   
+            {
                 ViewBag.success = "Account Activated.";
                 return View();
-                //return RedirectToAction("Login", "Account");
-=======
-            {
-                ViewBag.ConfirmationMsg = "Account has been activated succesfully.";
-                return RedirectToAction("Login", "Account");
->>>>>>> 6c1b12dd71cdd591c22fe198ddf0334fc70fb44a
             }
             else
             {
@@ -181,14 +175,15 @@ namespace TAClassifieds.Controllers
             //AccountBL updateprofile = new AccountBL();
             //Guid userId = Guid.Parse(Session["UserId"].ToString());
             //User user=updateprofile.FetchUserInfo(userId);
-            String Userguid = string.Empty;
-            var identity = (ClaimsIdentity)User.Identity;
-            IEnumerable<Claim> claims = identity.Claims;
-            var userguidArray = claims.Where(m => m.Type == "guid");
-            Userguid = userguidArray.FirstOrDefault().Value;
+
+            String Userguid = getClaims("email");
+            //var identity = (ClaimsIdentity)User.Identity;
+            //IEnumerable<Claim> claims = identity.Claims;
+            //var userguidArray = claims.Where(m => m.Type == "email");
+            //Userguid = userguidArray.FirstOrDefault().Value;
             AccountBL obj = new AccountBL();
-            User resUser = obj.FetchUserInfo(Guid.Parse(Userguid));
-            return View();
+            User resUser = obj.FetchUser(Userguid);
+            return View(resUser);
         }
         
         [HttpPost]
@@ -196,11 +191,11 @@ namespace TAClassifieds.Controllers
         {
             //Guid userId = Guid.Parse(Session["UserId"].ToString());
             //profile.UserId = userId;
-            String Userguid = string.Empty;
-            var identity = (ClaimsIdentity)User.Identity;
-            IEnumerable<Claim> claims = identity.Claims;
-            var userguidArray = claims.Where(m => m.Type == "guid");
-            Userguid = userguidArray.FirstOrDefault().Value;
+            String Userguid = getClaims("guid");
+            //var identity = (ClaimsIdentity)User.Identity;
+            //IEnumerable<Claim> claims = identity.Claims;
+            //var userguidArray = claims.Where(m => m.Type == "guid");
+            //Userguid = userguidArray.FirstOrDefault().Value;
             profile.UserId = Guid.Parse(Userguid);
             AccountBL updateuser = new AccountBL();
             updateuser.UpdateProfile(profile);
@@ -492,27 +487,32 @@ namespace TAClassifieds.Controllers
                 userDetails.Email = some.Emails[0].Value;
 
                 User userModel = new Model.User();
+                userModel.IsActive = true;
                 userModel.IsVerified = true;
                 userModel.Email = some.Emails[0].Value;
                 userModel.UPassword = "Dummy Password";
                 AccountBL bl = new BAL.AccountBL();
-                bl.UserRegistration(userModel);
+                if (bl.UserRegistration(userModel))
+                {
+                    bl.Registration(userModel, true);
+                }
 
-                ApplicationUser appUser = new ApplicationUser();
-                appUser.UserName = some.Name.GivenName != null ? some.Name.GivenName : some.Emails[0].Value;
-                appUser.SecurityStamp = Guid.NewGuid().ToString();
-                appUser.Claims.Add(new IdentityUserClaim() { ClaimType = "email", ClaimValue = some.Emails[0].Value });
-                appUser.Claims.Add(new IdentityUserClaim() { ClaimType = "guid", ClaimValue = appUser.UserName });
-                await SignInAsync(appUser, false);
                 AccountBL loggedinuser = new AccountBL();
                 User resUser = loggedinuser.FetchUser(userModel.Email);
+                ApplicationUser appUser = addClaims(some.Emails[0].Value,resUser.UserId.ToString(),resUser.First_Name);
+                //appUser.Claims.Add(new IdentityUserClaim() { ClaimType = "guid", ClaimValue = resUser.UserId.ToString() });
+                //appUser.UserName = some.Name.GivenName != null ? some.Name.GivenName : resUser.Email;
+                //appUser.SecurityStamp = Guid.NewGuid().ToString();
+                //appUser.Claims.Add(new IdentityUserClaim() { ClaimType = "email", ClaimValue = some.Emails[0].Value });
+                
+                await SignInAsync(appUser, false);
                 if (TryValidateModel(resUser))
                 {
                     return RedirectToAction("GetAd", "Home");
                 }
             }
 
-            return RedirectToAction("UpdateProfile", "Account", new { email = userDetails.Email, firstName = userDetails.First_Name, lastName = userDetails.Last_Name });
+            return RedirectToAction("UpdateProfile", "Account");
         }
 
         
@@ -571,6 +571,37 @@ namespace TAClassifieds.Controllers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
+        private string getClaims(string claimType)
+        {
+            string returnClaimValue = string.Empty;
+            var identity = (ClaimsIdentity)User.Identity;
+            IEnumerable<Claim> claims = identity.Claims;
+            switch (claimType)
+            {
+                case "email":  var resClaimArray = claims.Where(m => m.Type == "email");
+                               returnClaimValue = resClaimArray.FirstOrDefault().Value;
+                               break;
+                case "guid":  resClaimArray = claims.Where(m => m.Type == "guid");
+                              returnClaimValue = resClaimArray.FirstOrDefault().Value;
+                              break;
+                default:      returnClaimValue= string.Empty;
+                              break;
+            }
+
+            return returnClaimValue;
+        }
+
+        private ApplicationUser addClaims(string email,string guid,string username)
+        {
+            ApplicationUser resUser = new ApplicationUser();
+            resUser.UserName = username;
+            resUser.SecurityStamp = Guid.NewGuid().ToString();
+            resUser.Claims.Add(new IdentityUserClaim() { ClaimType = "email", ClaimValue = email });
+            resUser.Claims.Add(new IdentityUserClaim() { ClaimType = "guid", ClaimValue = guid });
+            return resUser;
+        }
+
+
         private IAuthenticationManager AuthenticationManager
         {
             get
@@ -584,13 +615,13 @@ namespace TAClassifieds.Controllers
             string RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
             string UserIdClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
             string UserNameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name";
-
+            var emailUser = user.Claims.Where(m=>m.ClaimType=="email").FirstOrDefault().ClaimValue!=null?user.Claims.Where(m=>m.ClaimType=="email").FirstOrDefault().ClaimValue:string.Empty;
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             ClaimsIdentity identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie, UserNameClaimType,RoleClaimType);
             identity.AddClaim(new Claim(UserIdClaimType, user.Id, "http://www.w3.org/2001/XMLSchema#string"));
-            identity.AddClaim(new Claim(UserNameClaimType, user.UserName, "http://www.w3.org/2001/XMLSchema#string"));
+            identity.AddClaim(new Claim(UserNameClaimType, user.UserName!=null?user.UserName:emailUser, "http://www.w3.org/2001/XMLSchema#string"));
             identity.AddClaim(new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"));
-            identity.AddClaim(new Claim("guid", user.Id));
+
             foreach (var item in user.Claims)
             {
                 identity.AddClaim(new Claim(item.ClaimType, item.ClaimValue));

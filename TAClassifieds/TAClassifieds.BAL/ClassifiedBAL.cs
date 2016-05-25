@@ -21,7 +21,7 @@ namespace TAClassifieds.BAL
         }
 
         //Post Ads method for PostAd Controller,
-        public static int PostAdBAL(ClassifiedContactVM Model, string categoryvalue, HttpPostedFileBase file)
+        public static int PostAdBAL(ClassifiedContactVM Model, string categoryvalue, HttpPostedFileBase file,string userid)
         {
             int excFlag = 0;
             var path = string.Empty;
@@ -48,7 +48,8 @@ namespace TAClassifieds.BAL
             objClassified.ClassifiedPrice = Convert.ToInt32(Model.ClassifiedPrice);
             objClassified.Summary = Model.Description;
             objClassified.PostedDate = DateTime.Now;
-            objClassified.CreatedBy = Guid.Parse("aa968550-1c9e-483b-95d5-c12eab243024");
+
+            objClassified.CreatedBy = Guid.Parse(userid);
 
             ClassifiedContact objContact = Model.classifiedsContacts;
 
@@ -83,6 +84,18 @@ namespace TAClassifieds.BAL
         {
             UnitOfWork uw = new UnitOfWork();
             Model = uw.ClassifiedRepository.GetByID(classifiedId);
+            return Model;
+        }
+
+        public static ClassifiedContactVM GetMyAdsBAL(ClassifiedContactVM Model,string UserId)
+        {
+            UnitOfWork uw = new UnitOfWork();
+            if (!string.IsNullOrEmpty(UserId))
+            {
+                Model.classifiedList = uw.ClassifiedRepository.GetWithRawSql("select * from TAC_Classified c Join TAC_ClassifiedContact cc ON c.ClassifiedId=cc.ClassifiedId where CreatedBy=@createdBy order by PostedDate DESC", new SqlParameter("@createdBy", Guid.Parse(UserId)));
+                //ViewBag.CatagoryName = categoryName;
+            }           
+
             return Model;
         }
     }

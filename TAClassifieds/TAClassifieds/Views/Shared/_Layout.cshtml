@@ -41,7 +41,7 @@
 
                     </li>
                     <li>
-                        @Html.ActionLink("Post Ad", "PostAd", new { controller = "PostAd" }, new { @class = "glyphicon glyphicon-tasks alt" })
+                        @Html.ActionLink("Post Ad", "PostAd", new { controller = "Ad" }, new { @class = "glyphicon glyphicon-tasks alt" })
 
                     </li>
                     @if (!Request.IsAuthenticated)
@@ -54,7 +54,13 @@
                             @Html.ActionLink("Register", "Register", new { controller = "Account" })
                         </li>
                     }
+                    @if(Request.IsAuthenticated)
+	                 {
+                    <li>
+                        @Html.ActionLink("My Ads", "GetMyAds", new { controller = "MyAds" }, new { @class = "glyphicon glyphicon-tasks alt" })
 
+                    </li>
+	                }
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
