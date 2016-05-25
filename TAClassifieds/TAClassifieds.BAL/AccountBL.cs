@@ -122,7 +122,7 @@ namespace TAClassifieds.BAL
 
             VerifyToken vp = uw.VerifyTokenRepository.GetByID(tokenid);
             //if (vp.CreatedDate.AddHours(24)>DateTime.Now)
-            if (vp.CreatedDate.AddMinutes(1) > DateTime.Now && vp.IsUsed != true)
+            if (vp.CreatedDate.AddHours(24) > DateTime.Now && vp.IsUsed != true)
             {
                 vp.TokenId = tokenid;
                 vp.IsUsed = true;

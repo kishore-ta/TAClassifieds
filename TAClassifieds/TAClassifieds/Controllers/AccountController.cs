@@ -30,7 +30,6 @@ using System.IO;
 using Facebook;
 using Newtonsoft.Json;
 using System.Web.Security;
-using Microsoft.Owin.Security;
 
 namespace TAClassifieds.Controllers
 {
