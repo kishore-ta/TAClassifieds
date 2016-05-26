@@ -1,41 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Facebook;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Auth.OAuth2.Flows;
+using Google.Apis.Auth.OAuth2.Responses;
+using Google.Apis.Oauth2.v2;
+using Google.Apis.Oauth2.v2.Data;
+using Google.Apis.Plus.v1;
+using Google.Apis.Plus.v1.Data;
+using Google.Apis.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
-using TAClassifieds.Data;
+using Newtonsoft.Json;
+using TAClassifieds.BAL;
 using TAClassifieds.Model;
 using TAClassifieds.Models;
-using System.Text;
-using System.Security.Cryptography;
-using System.Net.Mail;
-using TAClassifieds.BAL;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Plus.v1;
-using Google.Apis.Auth.OAuth2.Responses;
-using Google.Apis.Auth.OAuth2.Flows;
-using System.Threading;
-using Google.Apis.Oauth2.v2;
-using Google.Apis.Plus.v1.Data;
-using Google.Apis.Oauth2.v2.Data;
-using System.Security.Principal;
-using System.Configuration;
-using System.Net;
-using System.IO;
-using Facebook;
-using Newtonsoft.Json;
-using System.Web.Security;
-using Microsoft.Owin.Security;
 
 namespace TAClassifieds.Controllers
 {
     public class AccountController : Controller
     {
+        public string UserNameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name";
 
         public AccountController()
             : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
@@ -199,6 +194,11 @@ namespace TAClassifieds.Controllers
             profile.UserId = Guid.Parse(Userguid);
             AccountBL updateuser = new AccountBL();
             updateuser.UpdateProfile(profile);
+            //update claim
+            if (!string.IsNullOrEmpty(profile.First_Name))
+            {
+                AddUpdateClaim(UserNameClaimType,profile.First_Name);
+            }
             return RedirectToAction("GetAd", "Home");
         }
         
@@ -465,7 +465,7 @@ namespace TAClassifieds.Controllers
                           CancellationToken.None).Result;
                 // Get tokeninfo for the access token if you want to verify.
                 Oauth2Service service = new Oauth2Service(
-                    new Google.Apis.Services.BaseClientService.Initializer());
+                    new BaseClientService.Initializer());
                 Oauth2Service.TokeninfoRequest request = service.Tokeninfo();
                 request.AccessToken = token.AccessToken;
 
@@ -474,7 +474,7 @@ namespace TAClassifieds.Controllers
 
                 UserCredential gplusUserCredential = new UserCredential(flow, "me", token);
                 ps = new PlusService(
-                    new Google.Apis.Services.BaseClientService.Initializer()
+                    new BaseClientService.Initializer()
                     {
                         ApplicationName = "TA-Classifieds",
                         HttpClientInitializer = gplusUserCredential
@@ -486,12 +486,12 @@ namespace TAClassifieds.Controllers
                 userDetails.Last_Name = some.Name.FamilyName;
                 userDetails.Email = some.Emails[0].Value;
 
-                User userModel = new Model.User();
+                User userModel = new User();
                 userModel.IsActive = true;
                 userModel.IsVerified = true;
                 userModel.Email = some.Emails[0].Value;
                 userModel.UPassword = "Dummy Password";
-                AccountBL bl = new BAL.AccountBL();
+                AccountBL bl = new AccountBL();
                 if (bl.UserRegistration(userModel))
                 {
                     bl.Registration(userModel, true);
@@ -551,10 +551,10 @@ namespace TAClassifieds.Controllers
                     var name = user.name;
                     var Email = email.email;
 
-                    User userModel = new Model.User();
+                    User userModel = new User();
                     userModel.Email = Email;
                     userModel.UPassword = "Dummy Password";
-                    AccountBL bl = new BAL.AccountBL();
+                    AccountBL bl = new AccountBL();
                     bl.UserRegistration(userModel); 
 
                     return RedirectToAction("UpdateProfile", "Account", new { email = Email, firstName = name,lastName=""});
@@ -609,12 +609,28 @@ namespace TAClassifieds.Controllers
                 return HttpContext.GetOwinContext().Authentication;
             }
         }
+        public  void AddUpdateClaim(string key, string value)
+        {
+            var identity = User.Identity as ClaimsIdentity;
+            if (identity == null)
+                return;
 
+            // check for existing claim and remove it
+            var existingClaim = identity.FindFirst(key);
+            if (existingClaim != null)
+                identity.RemoveClaim(existingClaim);
+
+            // add new claim
+            identity.AddClaim(new Claim(key, value));
+            //var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
+            AuthenticationManager.AuthenticationResponseGrant = new AuthenticationResponseGrant(new ClaimsPrincipal(identity), new AuthenticationProperties() { IsPersistent = true });
+        }
         private async Task  SignInAsync(ApplicationUser user, bool isPersistent)
         {
+           
             string RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
             string UserIdClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
-            string UserNameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name";
+            
             var emailUser = user.Claims.Where(m=>m.ClaimType=="email").FirstOrDefault().ClaimValue!=null?user.Claims.Where(m=>m.ClaimType=="email").FirstOrDefault().ClaimValue:string.Empty;
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             ClaimsIdentity identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie, UserNameClaimType,RoleClaimType);

@@ -147,7 +147,7 @@ namespace TAClassifieds.BAL
                 uw.Save();
                 Guid userid = vp.UserId;
                 User op = uw.UserRepository.GetByID(userid);
-                op.IsActive = false;
+                //op.IsActive = false;
                 uw.UserRepository.Update(op);
                 uw.Save();
                 return false;
