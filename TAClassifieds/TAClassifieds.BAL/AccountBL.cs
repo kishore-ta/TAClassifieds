@@ -20,11 +20,8 @@ namespace TAClassifieds.BAL
             var userfromDB = u.FirstOrDefault();
             if (userfromDB != null)
             {
-
                 if (userfromDB.IsVerified == true && userfromDB.IsActive == true)
-                {
                     return false;
-                }
                 else
                     return true;
             }
@@ -32,16 +29,7 @@ namespace TAClassifieds.BAL
                 return true;
 
             //var isVerified = u.Where(user => !user.IsVerified.HasValue);
-
             //return isVerified != null;
-            //if (isVerified!=null)
-            //{
-            //    return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
         }
         public void Registration(User model, Boolean isSocialLogin)
         {
@@ -49,6 +37,14 @@ namespace TAClassifieds.BAL
             var user = FetchUser(model.Email);
             if (user != null && !user.IsVerified.HasValue)
             {
+                string encryptedpwd = Encryption(model.UPassword);
+                if (encryptedpwd != user.UPassword)
+                {
+                    User op = FetchUser(model.Email);
+                    op.UPassword = encryptedpwd;
+                    uw.UserRepository.Update(op);
+                    uw.Save();
+                }
                 //send new verification link
                 var tokenverification1 = new VerifyToken() { TokenId = Guid.NewGuid(), UserId = user.UserId, CreatedDate = DateTime.Now };
                 var userVerification1 = uw.VerifyTokenRepository.Insert(tokenverification1);
@@ -57,7 +53,6 @@ namespace TAClassifieds.BAL
                 {
                     AccountActivation(user, userVerification1);
                 }
-
             }
             else
             {
@@ -119,10 +114,10 @@ namespace TAClassifieds.BAL
         }
         public Boolean Confirmation(Guid tokenid)
         {
-
             VerifyToken vp = uw.VerifyTokenRepository.GetByID(tokenid);
             //if (vp.CreatedDate.AddHours(24)>DateTime.Now)
-            if (vp.CreatedDate.AddMinutes(1) > DateTime.Now && vp.IsUsed != true)
+            //if (vp.CreatedDate.AddMinutes(1) > DateTime.Now && vp.IsUsed != true)
+            if (vp.CreatedDate.AddHours(24) > DateTime.Now && vp.IsUsed != true)
             {
                 vp.TokenId = tokenid;
                 vp.IsUsed = true;
